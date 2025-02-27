@@ -24,7 +24,7 @@ function Header() {
       if (!token || !username) return;
 
       try {
-        const response = await axios.get(`https://42cb-103-141-189-170.ngrok-free.app/user-details/${username}`, {
+        const response = await axios.get(`https://7a54-103-141-189-170.ngrok-free.app/user-details/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -68,7 +68,7 @@ function Header() {
 
   const handleLogout = () => {
     stopInactivityTimer();
-    axios.post("https://42cb-103-141-189-170.ngrok-free.app/logout", {}, {
+    axios.post("https://7a54-103-141-189-170.ngrok-free.app/logout", {}, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     }).finally(() => {
       localStorage.removeItem("token");
