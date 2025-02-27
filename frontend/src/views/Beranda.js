@@ -140,10 +140,10 @@ function Beranda() {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      // withCredentials: true,
+      withCredentials: true,
       });
       setPinjaman(response.data);
-      // console.log("Response dari backend:", response.data);
+      console.log("Response pinjaman dari backend:", response.data);
 
     } catch (error) {
       console.error("Error fetching data:", error.message); 
@@ -159,7 +159,7 @@ function Beranda() {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      // withCredentials: true,
+      withCredentials: true,
   
       });
       setPinjamanData(response.data);
