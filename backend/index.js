@@ -91,7 +91,7 @@ const protectedRoutes = [
 
 // Terapkan middleware otentikasi pada routes yang dilindungi
 protectedRoutes.forEach(route => {
-    app.use(verifyToken, checkSessionTimeout, route); 
+    app.use(checkSessionTimeout, route); 
 });
 
 process.env.NODE_ENV = 'production';
