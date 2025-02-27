@@ -94,8 +94,9 @@ protectedRoutes.forEach(route => {
     app.use(verifyToken, checkSessionTimeout, route); 
 });
 
-process.env.NODE_ENV = 'production';
-console.log("Running in", process.env.NODE_ENV, "mode");
+if (process.env.NODE_ENV === 'development') {
+    console.log('Running in development mode');
+}
 
 app.listen(5000, () => console.log('Server up and running in port 5000'));
 
