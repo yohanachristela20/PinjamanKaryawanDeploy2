@@ -33,15 +33,21 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    preflightContinue: false,
+    preflightContinue: true,
     optionsSuccessStatus: 204
 }));
 
-app.options('*', cors());
+// app.options('*', cors());
 
-// app.options("*", (req, res) => {
-//     res.sendStatus(200);
-// });
+app.options("*", (req, res) => {
+    res.sendStatus(204);
+});
+
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.path}`);
+    console.log("Headers:", req.headers);
+    next();
+});
 
 // app.options('*', (req, res) => {
 //     res.header("Access-Control-Allow-Origin", "https://pinjaman-karyawan-deploy2.vercel.app");
