@@ -140,7 +140,7 @@ function Beranda() {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      withCredentials: true,
+      // withCredentials: true,
       });
       setPinjaman(response.data);
       // console.log("Response dari backend:", response.data);
@@ -159,7 +159,7 @@ function Beranda() {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      withCredentials: true,
+      // withCredentials: true,
   
       });
       setPinjamanData(response.data);
