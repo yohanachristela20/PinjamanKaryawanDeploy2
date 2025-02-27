@@ -31,7 +31,7 @@ const app = express();
 
 app.use(cors({
     // origin: "https://pinjaman-karyawan-deploy.vercel.app", 
-    origin: "https://03d9-103-141-189-170.ngrok-free.app",
+    origin: "https://pinjaman-karyawan-deploy2.vercel.app",
     methods: "GET, POST, PUT, DELETE, OPTIONS , PATCH", 
     allowedHeaders: "Content-Type, Authorization",
     // credentials: true,
@@ -44,7 +44,7 @@ app.use(cors({
 // });
 
 app.options('*', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "https://03d9-103-141-189-170.ngrok-free.app");
+    res.header("Access-Control-Allow-Origin", "https://pinjaman-karyawan-deploy2.vercel.app");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     // res.header("Access-Control-Allow-Credentials", "true");

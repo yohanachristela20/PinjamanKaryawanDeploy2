@@ -24,7 +24,7 @@ function Header() {
       if (!token || !username) return;
 
       try {
-        const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
+        const response = await axios.get(`https://bf24-103-141-189-170.ngrok-free.app/user-details/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -68,7 +68,7 @@ function Header() {
 
   const handleLogout = () => {
     stopInactivityTimer();
-    axios.post("http://localhost:5000/logout", {}, {
+    axios.post("https://bf24-103-141-189-170.ngrok-free.app/logout", {}, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     }).finally(() => {
       localStorage.removeItem("token");
