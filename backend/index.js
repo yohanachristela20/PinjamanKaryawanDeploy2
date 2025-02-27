@@ -49,6 +49,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // app.options('*', (req, res) => {
 //     res.header("Access-Control-Allow-Origin", "https://pinjaman-karyawan-deploy2.vercel.app");
 //     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
