@@ -27,29 +27,29 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 const app = express();
 
-// const allowedOrigin = "https://pinjaman-karyawan-deploy.vercel.app";
 
 app.use(cors({
-    // origin: "https://pinjaman-karyawan-deploy.vercel.app", 
     origin: "https://pinjaman-karyawan-deploy2.vercel.app",
-    methods: "GET, POST, PUT, DELETE, OPTIONS , PATCH", 
-    allowedHeaders: "Content-Type, Authorization",
-    // credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
 
-// app.options('*', cors());
+app.options('*', cors());
 
 // app.options("*", (req, res) => {
 //     res.sendStatus(200);
 // });
 
-app.options('*', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "https://pinjaman-karyawan-deploy2.vercel.app");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    // res.header("Access-Control-Allow-Credentials", "true");
-    res.sendStatus(200);
-});
+// app.options('*', (req, res) => {
+//     res.header("Access-Control-Allow-Origin", "https://pinjaman-karyawan-deploy2.vercel.app");
+//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     // res.header("Access-Control-Allow-Credentials", "true");
+//     res.sendStatus(200);
+// });
 
 
 // app.use((req, res, next) => {
@@ -86,6 +86,9 @@ const protectedRoutes = [
 protectedRoutes.forEach(route => {
     app.use(verifyToken, checkSessionTimeout, route); 
 });
+
+process.env.NODE_ENV = 'development';
+console.log("Running in", process.env.NODE_ENV, "mode");
 
 app.listen(5000, () => console.log('Server up and running in port 5000'));
 
