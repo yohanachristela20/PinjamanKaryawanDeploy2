@@ -136,7 +136,7 @@ function Beranda() {
   const getPinjaman = async () =>{
     try {
       setLoading(true);
-      const response = await axios.get("https://bf24-103-141-189-170.ngrok-free.app/pinjaman", {
+      const response = await axios.get("http://localhost:5000/pinjaman", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -155,7 +155,7 @@ function Beranda() {
   const getPinjamanData = async () =>{
     try {
       setLoading(true);
-      const response = await axios.get("https://bf24-103-141-189-170.ngrok-free.app/pinjaman-data", {
+      const response = await axios.get("http://localhost:5000/pinjaman-data", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
