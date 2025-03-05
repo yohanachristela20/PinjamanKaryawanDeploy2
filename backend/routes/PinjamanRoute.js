@@ -193,6 +193,14 @@ router.get("/plafond-saat-ini", async (req, res) => {
     );
 
     const plafondUpdate = await PlafondUpdate.findOne({
+      include: [
+        {
+          model: Pinjaman,
+          as: "UpdatePinjamanPlafond",
+          attributes: ["status_pengajuan", "status_transfer"],
+          where: { status_pengajuan: {[Op.ne]: 'Dibatalkan'}, status_transfer: {[Op.ne]: 'Dibatalkan'} },
+        }
+      ],
       order: [["id_plafondupdate", "DESC"]],
       limit: 1,
     });
@@ -673,7 +681,7 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
       keperluan: row.keperluan,
       status_pengajuan: row.status_pengajuan = "Diterima",
       status_transfer: row.status_transfer = "Selesai",
-      status_pelunasan: row.status_pelunasan,
+      status_pelunasan: row.status_pelunasan = "",
       not_compliant: row.not_compliant === "true",
       id_peminjam: parseInt(row.id_peminjam, 10),
       id_asesor: parseInt(row.id_asesor, 10) || null,
@@ -728,7 +736,7 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
 
       const totalPinjaman = data_pengajuan.reduce(( sum, item ) => sum + item.jumlah_pinjaman, 0);
 
-      const plafondTerakhir = await PlafondUpdate.findOne({
+      let plafondTerakhir = await PlafondUpdate.findOne({
         include: [
           {
             model: Pinjaman,
@@ -744,11 +752,21 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
       });
 
     if (!plafondTerakhir) {
-      console.log("Data plafond terakhir tidak ditemukan.");
-      return res.status(404).json({ success: false, message: "Plafond terakhir tidak ditemukan" });
+      // console.log("Data plafond terakhir tidak ditemukan.");
+      // return res.status(404).json({ success: false, message: "Plafond terakhir tidak ditemukan" });
+      plafondTerakhir = await Plafond.findOne({
+        attributes: ["id_plafond", "jumlah_plafond"],
+        order: [["id_plafond", "DESC"]],
+        raw: true,
+        transaction
+      });
+
+      // const latestPlafond = await Plafond.findOne({
+      //   order: [["id_plafond", "DESC"]],
+      // });
     }
 
-    let plafondBaru = parseFloat(plafondTerakhir.plafond_saat_ini || 0) - totalPinjaman;
+    let plafondBaru = parseFloat(plafondTerakhir.plafond_saat_ini || plafondTerakhir.jumlah_plafond) - totalPinjaman;
 
     console.log("Plafond baru: ", plafondBaru);
 

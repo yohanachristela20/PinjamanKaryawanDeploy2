@@ -21,7 +21,7 @@ const ImportAngsuran = ({showImportModal, setShowImportModal, onSuccess}) => {
     const formData = new FormData();
     formData.append("csvfile", file);
 
-    fetch("http://localhost:5000/angsuran/import-csv", {
+    fetch("http://10.70.10.144:5000/angsuran/import-csv", {
       method: "POST",
       body: formData,
       headers: {
@@ -52,18 +52,7 @@ const ImportAngsuran = ({showImportModal, setShowImportModal, onSuccess}) => {
 
   const downloadCSV = (data) => {
     const header = ["id_angsuran", "tanggal_angsuran", "id_peminjam", "id_pinjaman", "sudah_dibayar", "belum_dibayar", "bulan_angsuran", "keterangan"];
-    // const rows = data.map((item) => [
-    //   item.id_angsuran,
-    //   item.tanggal_angsuran,
-    //   item.id_peminjam,
-    //   // item.KaryawanPeminjam.nama,
-    //   item.id_pinjaman,
-    //   item.sudah_dibayar,
-    //   item.belum_dibayar,
-    //   item.bulan_angsuran,
-    //   item.keterangan
-    // ]);
-  
+
     const csvContent = [header]
       .map((e) => e.join(","))
       .join("\n");

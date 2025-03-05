@@ -22,7 +22,7 @@ const EditUser = ({showEditModal, setShowEditModal, user, onSuccess}) => {
     const updateUser = async(e) => {
         e.preventDefault();
         try {
-            await axios.patch(`http://localhost:5000/user/${user.id_user}`, {
+            await axios.patch(`http://10.70.10.144:5000/user/${user.id_user}`, {
                 id_user,
                 password,
                 role
@@ -35,7 +35,7 @@ const EditUser = ({showEditModal, setShowEditModal, user, onSuccess}) => {
             setShowEditModal(false);
             onSuccess();
         } catch (error) {
-            console.log(error.message);
+            // console.log(error.message);
             toast.error('Gagal mengubah data user.', {
                 position: "top-right",
                 autoClose: 5000,
@@ -43,34 +43,9 @@ const EditUser = ({showEditModal, setShowEditModal, user, onSuccess}) => {
               });
         }
     }
-    
-
-    const handleUsernameChange = (value) => {
-        const numericValue = value.replace(/\D/g, "");
-        setIdUser(numericValue);
-    };
-
 
     return (
         <>
-            {/* {showAlert && (
-                <Alert variant="success" onClose={() => setShowAlert(false)}>
-                    <button
-                        aria-hidden={true}
-                        className="close"
-                        data-dismiss="alert"
-                        type="button"
-                        onClick={() => setShowAlert(false)}
-                        
-                    >
-                        <i className="nc-icon nc-simple-remove"></i>
-                    </button>
-                    <span>
-                        <b>Success</b><br /> Data berhasil disimpan
-                    </span>
-                </Alert>
-            )} */}
-
             {/* Mini Modal */}
             <Modal
             className=" modal-primary"
@@ -85,22 +60,6 @@ const EditUser = ({showEditModal, setShowEditModal, user, onSuccess}) => {
                 <Form onSubmit={updateUser}>
 
                 <span className="text-danger required-select">*Wajib diisi.</span>
-
-                <Row>
-                {/* <Col md="12">
-                    <Form.Group>
-                    <span className="text-danger">*</span>
-                        <label className="mt-3">ID User</label>
-                        <Form.Control
-                            placeholder="ID User"
-                            type="text"
-                            required
-                            value={id_user}
-                            onChange={(e) => (e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
-                </Col> */}
-                </Row>
                 <Row>
                 <Col md="12">
                 <Form.Group>
@@ -111,7 +70,6 @@ const EditUser = ({showEditModal, setShowEditModal, user, onSuccess}) => {
                         type="text"
                         readOnly
                         value={username}
-                        // onChange={(e) => handleUsernameChange(e.target.value)}
                     ></Form.Control>
                     </Form.Group>
                 </Col>

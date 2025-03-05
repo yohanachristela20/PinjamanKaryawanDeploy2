@@ -24,20 +24,20 @@ function Login() {
     }
   
     try {
-      const response = await axios.post('https://8ae4-103-141-189-170.ngrok-free.app/user-login', {
+      const response = await axios.post('http://10.70.10.144:5000/user-login', {
           username: username,
           password: password,
           role: role,
       });
 
-      console.log("Login response:", response);
+      // console.log("Login response:", response);
 
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token); 
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('username', response.data.username); 
-        console.log('Login Sukses');
+        // console.log('Login Sukses');
   
         alert(`Login sukses sebagai ${role}`);
 

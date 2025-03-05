@@ -11,7 +11,6 @@ import "../assets/scss/lbd/_table-header.scss";
 import ImportAntreanPengajuan from "components/ModalForm/ImportAntreanPengajuan.js";
 import {toast } from 'react-toastify';
 
-// react-bootstrap components
 import {
   Badge,
   Button,
@@ -77,33 +76,6 @@ import {
   const [userData, setUserData] = useState({id_karyawan: "", nama: "", divisi: "", role: ""}); 
 
 
-   const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      const role = localStorage.getItem("role");
-      const username = localStorage.getItem("username");
-  
-      console.log("User token: ", token, "User role:", role);
-      try {
-        if (!token || !username) return;
-  
-        const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        if (response.data) {
-          setUserData({
-            id_karyawan: response.data.id_karyawan,
-            nama: response.data.nama,
-            divisi: response.data.divisi,
-            role: response.data.role, 
-          });
-          console.log("User data fetched:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-   };
-
   useEffect(() => {
  
    const fetchData = async () => {
@@ -119,16 +91,16 @@ import {
          responseTotalDibayar,
          responsePlafond,
        ] = await Promise.all([
-         axios.get("http://localhost:5000/total-pinjaman-keseluruhan", {
+         axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
            headers: { Authorization: `Bearer ${token}` },
          }),
-         axios.get("http://localhost:5000/total-peminjam", {
+         axios.get("http://10.70.10.144:5000/total-peminjam", {
            headers: { Authorization: `Bearer ${token}` },
          }),
-         axios.get("http://localhost:5000/total-dibayar", {
+         axios.get("http://10.70.10.144:5000/total-dibayar", {
            headers: { Authorization: `Bearer ${token}` },
          }),
-         axios.get("http://localhost:5000/latest-plafond-saat-ini", {
+         axios.get("http://10.70.10.144:5000/latest-plafond-saat-ini", {
            headers: { Authorization: `Bearer ${token}` },
          }),
        ]);
@@ -159,7 +131,7 @@ import {
   const getPinjaman = async () =>{
     try {
       // setLoading(true);
-      const response = await axios.get("http://localhost:5000/pinjaman", {
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -175,7 +147,7 @@ import {
   const getPinjamanData = async (req, res) =>{
     try {
       // setLoading(true);
-      const response = await axios.get("http://localhost:5000/pinjaman-data", {
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman-data", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -191,7 +163,7 @@ import {
   const getPlafond = async () =>{
     try {
       // setLoading(true);
-      const response = await axios.get("http://localhost:5000/jumlah-plafond", {
+      const response = await axios.get("http://10.70.10.144:5000/jumlah-plafond", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -297,7 +269,7 @@ import {
 
   });
 
-  console.log("Baris CSV:", rows);
+  // console.log("Baris CSV:", rows);
 
   const csvContent = [header, ...rows]
     .map((row) => row.join(","))

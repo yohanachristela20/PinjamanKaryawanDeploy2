@@ -18,7 +18,7 @@ const db = new Sequelize(process.env.DB_DBNAME, process.env.DB_USERNAME, process
     host: process.env.DB_HOST, 
     dialect: 'mysql',
     port: process.env.DB_PORT,
-    timezone: "+07:00", //Indonesian timezone
+    timezone: "+07:00", //Indonesian timezone 
     dialectOptions: {
         timezone: "local", 
     },

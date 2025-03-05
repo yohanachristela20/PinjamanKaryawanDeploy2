@@ -13,9 +13,9 @@ import { Sequelize, Op, where } from "sequelize";
 import {getPlafond,
         getPlafondById, 
         createPlafond, 
-        updatePlafond, 
+        // updatePlafond, 
         getLastPlafondId,
-        deletePlafond,
+        // deletePlafond,
         getJumlahPlafond,
 } from "../controllers/PlafondController.js"; 
 
@@ -42,9 +42,9 @@ router.get('/plafond', getPlafond);
 router.get('/jumlah-plafond', getJumlahPlafond);
 router.get('/plafond/:id_plafond', getPlafondById);
 router.post('/plafond', createPlafond);  
-router.patch('/plafond/:id_plafond', updatePlafond);
+// router.patch('/plafond/:id_plafond', updatePlafond);
 router.get('/plafond/getNextPlafondId', getLastPlafondId);
-router.delete('/plafond/:id_plafond', deletePlafond);
+// router.delete('/plafond/:id_plafond', deletePlafond);
 
 // router.post('/plafond/import-csv', upload.single("csvfile"), (req,res) => {
 // if (!req.file) {

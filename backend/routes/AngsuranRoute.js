@@ -170,6 +170,7 @@ router.post('/angsuran/import-csv', upload.single("csvfile"), async (req,res) =>
         status: row.status,
         sudah_dibayar: parseFloat(row.sudah_dibayar),
         belum_dibayar: parseFloat(row.belum_dibayar),
+        sudah_dihitung: true,
     //     rasio_angsuran: parseInt(row.rasio_angsuran, 10),
         status:  parseFloat(row.belum_dibayar) <=0 ? 'Lunas' : 'Belum Lunas',
         id_peminjam: row.id_peminjam,

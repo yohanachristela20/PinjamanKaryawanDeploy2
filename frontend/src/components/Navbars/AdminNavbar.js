@@ -3,7 +3,6 @@ import { useLocation, useHistory } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button, Modal } from "react-bootstrap";
 import {FaDoorClosed, FaDoorOpen, FaKey, FaUser} from 'react-icons/fa'; 
 import routes from "routes.js";
-import UserAccount from "components/UserAccount/UserAcount.js";
 import UbahPassword from "components/ModalForm/UbahPassword.js";
 import "../../assets/scss/lbd/_logout.scss";
 import axios from "axios";
@@ -24,7 +23,7 @@ function Header() {
       if (!token || !username) return;
 
       try {
-        const response = await axios.get(`https://8ae4-103-141-189-170.ngrok-free.app/user-details/${username}`, {
+        const response = await axios.get(`http://10.70.10.144:5000/user-details/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -68,7 +67,7 @@ function Header() {
 
   const handleLogout = () => {
     stopInactivityTimer();
-    axios.post("https://8ae4-103-141-189-170.ngrok-free.app/logout", {}, {
+    axios.post("http://10.70.10.144:5000/logout", {}, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     }).finally(() => {
       localStorage.removeItem("token");

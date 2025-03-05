@@ -16,7 +16,7 @@ const AddUser = ({showAddModal, setShowAddModal, onSuccess}) => {
         try {
             const defaultPassword = "campina123"; 
 
-            const response = await axios.get('http://localhost:5000/last-id', {
+            const response = await axios.get('http://10.70.10.144:5000/last-id', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -29,7 +29,7 @@ const AddUser = ({showAddModal, setShowAddModal, onSuccess}) => {
                 newId = `USC${incrementedIdNumber}`;
             }
 
-            await axios.post('http://localhost:5000/user', {
+            await axios.post('http://10.70.10.144:5000/user', {
                 id_user: newId,
                 username, 
                 password: defaultPassword,
@@ -43,7 +43,7 @@ const AddUser = ({showAddModal, setShowAddModal, onSuccess}) => {
             onSuccess();
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message;
-            console.log(error.message);
+            // console.log(error.message);
             toast.error('Gagal menyimpan data user baru.', {
                 position: "top-right",
                 autoClose: 5000,

@@ -7,7 +7,7 @@ import {FaCheckCircle, FaTimesCircle, FaHistory} from 'react-icons/fa';
 import { useHistory } from "react-router-dom";
 
 
-const BASE_URL = 'https://2258-103-141-189-170.ngrok-free.app';
+const BASE_URL = 'http://10.70.10.144:5000';
 export const fetchHistoryPinjaman = async (idPeminjam) => {
   return axios.get(`${BASE_URL}/history-pinjaman/${idPeminjam}`, {
     headers: {
@@ -84,23 +84,23 @@ function ScreeningKaryawanManual() {
           responseTotalJumlahPinjaman,
           responsePlafond,
         ] = await Promise.all([
-          // axios.get(`http://localhost:5000/karyawan/${selectedPinjaman?.id_peminjam}`), 
-          axios.get(`http://localhost:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
+          // axios.get(`http://10.70.10.144:5000/karyawan/${selectedPinjaman?.id_peminjam}`), 
+          axios.get(`http://10.70.10.144:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get(`http://localhost:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
+          axios.get(`http://10.70.10.144:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get("http://localhost:5000/total-pinjaman-keseluruhan", {
+          axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          // axios.get("http://localhost:5000/plafond-tersedia"),
+          // axios.get("http://10.70.10.144:5000/plafond-tersedia"),
         ]);
 
         const totalSudahDibayar = responseTotalSudahDibayar.data.total_sudah_dibayar || 0;
@@ -229,9 +229,9 @@ const totalBelumDibayar =
             (latest, current) =>
               current.id_angsuran > latest.id_angsuran ? current : latest
           );
-          console.log(
-            `ID Pinjaman: ${angsuranTerakhir.id_pinjaman}, ID Angsuran Terakhir: ${angsuranTerakhir.id_angsuran}, Belum Dibayar: ${angsuranTerakhir.belum_dibayar}`
-          );
+          // console.log(
+          //   `ID Pinjaman: ${angsuranTerakhir.id_pinjaman}, ID Angsuran Terakhir: ${angsuranTerakhir.id_angsuran}, Belum Dibayar: ${angsuranTerakhir.belum_dibayar}`
+          // );
           return angsuranTerakhir.belum_dibayar; // Ambil hanya nilai belum_dibayar
         })
         .reduce((total, belumDibayar) => total + parseFloat(belumDibayar || 0), 0) // Jumlahkan
@@ -260,102 +260,35 @@ const handleIdKaryawanKeyPress = async (event) => {
         },
         });
         const karyawanData = responseKaryawan.data;
-        console.log("Karyawan response: ", karyawanData);
-        console.log("Karyawan id: ", karyawanData.id_karyawan);
+        // console.log("Karyawan response: ", karyawanData);
+        // console.log("Karyawan id: ", karyawanData.id_karyawan);
 
         // if (!karyawanData) {
         //   console.error("Data karyawan tidak ditemukan.");
         //   return;
         // }
 
-        const plafondResponse = await axios.get("http://localhost:5000/plafond-tersisa", {
+        const plafondResponse = await axios.get("http://10.70.10.144:5000/plafond-tersisa", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
         });
         const plafondTersedia = plafondResponse.data.plafondTersedia;
         setPlafondTersedia(plafondTersedia);
-        console.log("Plafond tersedia:", plafondTersedia);
+        // console.log("Plafond tersedia:", plafondTersedia);
 
 
-        const pinjamanResponse = await axios.get(`http://localhost:5000/pinjaman/total-pinjaman/${karyawanData.id_karyawan}`, {
+        const pinjamanResponse = await axios.get(`http://10.70.10.144:5000/pinjaman/total-pinjaman/${karyawanData.id_karyawan}`, {
           headers: {
             Authorization: `Bearer ${token}`,
         },
         });
         const pinjamanData = pinjamanResponse.data || {};
-        console.log("Pinjaman data: ", pinjamanData);
-
-        // const totalPinjaman = pinjamanData.total_pinjaman || 0;
-        // const angsuranData = pinjamanData.angsuran || [];
-
-        // const plafondTersedia = pinjamanData.plafondTersedia;
-        
-        // const totalSudahDibayar = angsuranData.filter(angsuran => angsuran.status === 'Lunas').reduce((acc, angsuran) => acc + angsuran.bayar, 0);
-        // const totalBelumDibayar = angsuranData.filter(angsuran => angsuran.status !== 'Lunas').reduce((acc, angsuran) => acc + angsuran.belum_dibayar, 0);
-
-        // setTotalPinjaman(totalPinjaman);
-        // setTotalSudahDibayar(totalSudahDibayar);
-        // setBelumDibayar(totalBelumDibayar);
-        // setPlafondTersedia(plafondTersedia);
-        // console.log("Plafond tersedia hijau:", plafondTersedia);
-
-        // const plafondTersedia = pinjamanData.plafondTersedia ?? 0;
-
-        // const angsuranData = pinjamanData.angsuran || [];
-        // const totalPinjaman = pinjamanData.total_pinjaman || 0;
-
-        // const totalSudahDibayar = angsuranData
-        //   .filter((angsuran) => angsuran.status === "Lunas")
-        //   .reduce((acc, angsuran) => acc + angsuran.bayar, 0);
-
-        // const totalBelumDibayar = angsuranData
-        //   .filter((angsuran) => angsuran.status !== "Lunas")
-        //   .reduce((acc, angsuran) => acc + angsuran.belum_dibayar, 0);
-
-        // setTotalPinjaman(totalPinjaman);
-        // setTotalSudahDibayar(totalSudahDibayar);
-        // setBelumDibayar(totalBelumDibayar);
-        // setPlafondTersedia(plafondTersedia);
-
-        // console.log("Plafond tersedia hijau:", plafondTersedia);
+        // console.log("Pinjaman data: ", pinjamanData);
 
         if (pinjamanData && karyawanData.id_karyawan === pinjamanData.id_peminjam ) {
           setSelectedPinjaman(pinjamanData); 
-          console.log("Pinjaman data:", pinjamanData);
-
-          // const angsuranData = pinjamanData.angsuran || [];
-          // const totalSudahDibayar = angsuranData.filter(angsuran => angsuran.status === 'Lunas').reduce((acc, angsuran) => acc + angsuran.bayar, 0);
-          // const totalBelumDibayar = angsuranData.filter(angsuran => angsuran.status !== 'Lunas').reduce((acc, angsuran) => acc + angsuran.belum_dibayar, 0);
-
-          // setTotalSudahDibayar(totalSudahDibayar);
-          // setBelumDibayar(totalBelumDibayar);
-
-          // const totalPinjaman = pinjamanData.totalPinjaman || 0;
-          // setTotalPinjaman(totalPinjaman);
-
-
-          // Fetch Angsuran data to calculate total_belum_dibayar
-          // const angsuranResponse = await axios.get(`${BASE_URL}/angsuran/${id_peminjam}`);
-          // const angsuranData = angsuranResponse.data;
-
-          // // Calculate total_sudah_dibayar and total_belum_dibayar
-          // const totalSudahDibayar = angsuranData.filter(angsuran => angsuran.status === 'Lunas').reduce((acc, angsuran) => acc + angsuran.bayar, 0);
-          // const totalBelumDibayar = angsuranData.filter(angsuran => angsuran.status !== 'Lunas').reduce((acc, angsuran) => acc + angsuran.belum_dibayar, 0);
-
-          // // Update state with the values
-          // setTotalSudahDibayar(totalSudahDibayar);
-          // setBelumDibayar(totalBelumDibayar);
-
-          // Optionally, fetch additional history data
-          // const historyResponse = await fetchHistoryPinjaman(id_karyawan);
-          // console.log("History Pinjaman:", historyResponse.data);
-        } else {
-          // console.error("ID Karyawan tidak cocok dengan ID Peminjam");
-          // setTotalPinjaman(totalPinjaman);
-          // setTotalSudahDibayar(totalSudahDibayar);
-          // setBelumDibayar(totalBelumDibayar);
-          // setSelectedPinjaman(null);
+          // console.log("Pinjaman data:", pinjamanData);
          
         }
 
@@ -391,7 +324,7 @@ const handleIdKaryawanKeyPress = async (event) => {
         // console.log("Karyawan Data:", karyawanData);
 
         setPlafondTersedia(plafondTersedia);
-        console.log("Plafond tersedia:", plafondTersedia);
+        // console.log("Plafond tersedia:", plafondTersedia);
 
 
       } catch (error) {
@@ -407,72 +340,45 @@ const handleIdKaryawanKeyPress = async (event) => {
 const calculateRasioAngsuranMemoized = useMemo(() => {
   if (!jumlah_pinjaman || !gajiPokok) return 0; // Pastikan input valid untuk menghindari error
   
-  console.log("Jumlah pinjaman: ", jumlah_pinjaman);
-  console.log("Gaji pokok: ", gajiPokok);
+  // console.log("Jumlah pinjaman: ", jumlah_pinjaman);
+  // console.log("Gaji pokok: ", gajiPokok);
 
   // Hitung angsuran bulanan berdasarkan tenor 60 bulan
   const angsuranBulanan = jumlah_pinjaman / 60;
   // Hitung rasio angsuran dalam bentuk persentase
   const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
 
-  console.log("Angsuran bulanan: ", angsuranBulanan);
-  console.log("Rasio angsuran (persentase): ", rasioAngsuran);
+  // console.log("Angsuran bulanan: ", angsuranBulanan);
+  // console.log("Rasio angsuran (persentase): ", rasioAngsuran);
 
   // Return rasio angsuran sebagai angka, bukan string
   return parseFloat(rasioAngsuran.toFixed(2)); // 2 desimal untuk presisi
 
-  console.log(
-    "Rasio angsuran:",
-    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok)
-  );
+  // console.log(
+  //   "Rasio angsuran:",
+  //   calculateRasioAngsuran(jumlah_pinjaman, gajiPokok)
+  // );
 }, [jumlah_pinjaman, gajiPokok]);
 
 const calculateAngsuranBulananMemoized = useMemo(() => {
   if (!jumlah_pinjaman || !gajiPokok) return null; // Pastikan input valid untuk menghindari error
   
-  console.log("Jumlah pinjaman: ", jumlah_pinjaman);
-  console.log("Gaji pokok: ", gajiPokok);
+  // console.log("Jumlah pinjaman: ", jumlah_pinjaman);
+  // console.log("Gaji pokok: ", gajiPokok);
 
   // Hitung angsuran bulanan berdasarkan tenor 60 bulan
   const angsuranBulanan = jumlah_pinjaman / 60;
 
-  console.log("Angsuran bulanan: ", angsuranBulanan);
+  // console.log("Angsuran bulanan: ", angsuranBulanan);
 
   // Return rasio angsuran sebagai angka, bukan string
   return parseFloat(angsuranBulanan.toFixed(2)); // 2 desimal untuk presisi
 
-  console.log(
-    "Rasio angsuran:",
-    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok)
-  );
+  // console.log(
+  //   "Rasio angsuran:",
+  //   calculateRasioAngsuran(jumlah_pinjaman, gajiPokok)
+  // );
 }, [jumlah_pinjaman, gajiPokok]);
-
-
-const getScreeningResult = () => {
-  if (
-    tanggal_masuk &&
-    totalPinjaman !== undefined &&
-    totalSudahDibayar !== undefined &&
-    plafondTersedia !== null &&
-    jumlah_pinjaman !== undefined &&
-    gajiPokok !== undefined &&
-    tanggal_lahir &&
-    jenis_kelamin && 
-    keperluan !== null && 
-    rasioAngsuran !== null
-  ) {
-    const isDeclined =
-      calculateYears(tanggal_masuk) < 5 ||
-      totalPinjaman - totalSudahDibayar !== 0 ||
-      calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) > 20 ||
-      calculatePensiun(tanggal_lahir, jenis_kelamin) < 6 ||
-      parseFloat(plafondTersedia) < parseFloat(jumlah_pinjaman);
-
-    return isDeclined ? "Decline" : "Accepted";
-  }
-
-  return null;
-};
 
 
 const isDataComplete = () => {
@@ -517,8 +423,6 @@ const hasilScreening = React.useMemo(() => {
   keperluan,
   rasioAngsuran
 ]);
-
-
 
   return (
     <>
@@ -743,7 +647,7 @@ const hasilScreening = React.useMemo(() => {
                           ) : ( */}
                             <DeclineAlert/>
                           {/* )} */}
-                            {console.log('Hasil screening: Decline')}
+                            {/* {console.log('Hasil screening: Decline')} */}
                           </>
                         ) : (
                           <AcceptedAlert

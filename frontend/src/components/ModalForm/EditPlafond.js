@@ -30,7 +30,7 @@ const EditPlafond = ({showEditModal, setShowEditModal, plafond, onSuccess}) => {
         e.preventDefault();
 
         try {
-            await axios.patch(`http://localhost:5000/plafond/${plafond.id_plafond}`, {
+            await axios.patch(`http://10.70.10.144:5000/plafond/${plafond.id_plafond}`, {
                 id_plafond,
                 tanggal_penetapan,
                 jumlah_plafond,
@@ -43,20 +43,13 @@ const EditPlafond = ({showEditModal, setShowEditModal, plafond, onSuccess}) => {
             setShowEditModal(false);
             onSuccess();
         } catch (error) {
-            console.log(error.message);
+            // console.log(error.message);
             toast.error('Gagal mengubah data plafond.', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: true,
               });
         }
-    }
-
-    const getPlafondById = async () => {
-        const response = await axios.get(`http://localhost:5000/plafond/${id_plafond}`);
-        setTanggalPenetapan(response.data.tanggal_penetapan);
-        setJumlahPlafond(response.data.jumlah_plafond);
-        setKeterangan(response.data.keterangan);
     }
 
     const formatRupiah = (angka) => {

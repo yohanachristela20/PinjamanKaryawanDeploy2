@@ -52,7 +52,7 @@ function MasterUser() {
 
   const getUser = async () =>{
     try {
-      const response = await axios.get("http://localhost:5000/user", {
+      const response = await axios.get("http://10.70.10.144:5000/user", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -67,7 +67,7 @@ function MasterUser() {
 
   const deleteUser = async(id_user) =>{
     try {
-      await axios.delete(`http://localhost:5000/user/${id_user}` , {
+      await axios.delete(`http://10.70.10.144:5000/user/${id_user}` , {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -90,7 +90,7 @@ function MasterUser() {
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/user-details/${username}`,
+        `http://10.70.10.144:5000/user-details/${username}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -102,7 +102,7 @@ function MasterUser() {
           nama: response.data.nama,
           divisi: response.data.divisi,
         });
-        console.log("User data fetched:", response.data);
+        // console.log("User data fetched:", response.data);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -212,7 +212,7 @@ function MasterUser() {
   const setPassword = async(id_user) => {
     try {
 
-        await axios.put(`http://localhost:5000/user/${id_user}`, {
+        await axios.put(`http://10.70.10.144:5000/user/${id_user}`, {
         }, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -226,7 +226,7 @@ function MasterUser() {
         getUser();    
     } catch (error) {
         const errorMessage = error.response?.data?.message || error.message;
-        console.log(error.message);
+        // console.log(error.message);
         toast.error('Gagal menyimpan data user baru.', {
             position: "top-right",
             autoClose: 5000,

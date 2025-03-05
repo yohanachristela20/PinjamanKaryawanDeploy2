@@ -58,13 +58,13 @@ function Plafond() {
   const getPlafond = async () =>{
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/plafond", {
+      const response = await axios.get("http://10.70.10.144:5000/plafond", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
       });
       setPlafond(response.data);
-      console.log("Plafond:", response.data)
+      // console.log("Plafond:", response.data)
     } catch (error) {
       console.error("Error fetching data:", error.message); 
     } finally {

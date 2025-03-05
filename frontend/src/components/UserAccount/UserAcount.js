@@ -1,5 +1,4 @@
 import { Avatar, Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
-import {FaUser} from 'react-icons/fa'; 
 
 function UserAccount() {
   return (

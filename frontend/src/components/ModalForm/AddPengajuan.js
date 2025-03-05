@@ -23,7 +23,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
 
     const getPinjaman = async () =>{
         try {
-          const response = await axios.get("http://localhost:5000/pinjaman", {
+          const response = await axios.get("http://10.70.10.144:5000/pinjaman", {
             headers: {
               Authorization: `Bearer ${token}`,
           },
@@ -36,7 +36,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
 
       const fetchAntrean = async () => {
         try {
-          const response = await axios.get("http://localhost:5000/antrean-pengajuan", {
+          const response = await axios.get("http://10.70.10.144:5000/antrean-pengajuan", {
             headers: {
               Authorization: `Bearer ${token}`,
           },
@@ -49,7 +49,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
     
     const fetchLatestIdPengajuan = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/pinjaman/latest-id', {
+            const response = await axios.get('http://10.70.10.144:5000/pinjaman/latest-id', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -63,15 +63,6 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
         }
     };
 
-    const calculateJumlahAngsuran = (pinjaman) => {
-        const pinjamanValid = parseFloat(pinjaman) > 0; 
-
-            if (pinjamanValid) {
-                const angsuranBulanan = parseFloat(pinjaman) / 60; // Contoh perhitungan
-                return angsuranBulanan;
-            }
-            return '';
-    }
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
@@ -111,7 +102,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
             if (!token || !username) return;
       
             try {
-              const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
+              const response = await axios.get(`http://10.70.10.144:5000/user-details/${username}`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
       
@@ -141,7 +132,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
     const savePengajuan = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/pinjaman', {
+            await axios.post('http://10.70.10.144:5000/pinjaman', {
                 id_pinjaman,
                 tanggal_pengajuan,
                 jumlah_pinjaman,
@@ -182,18 +173,6 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
         const numericValue = value.replace(/\D/g, "");
         setJumlahPinjaman(numericValue);
     };
-
-    const handleJumlahAngsuranChange = (value) => {
-        const numericValue = value.replace(/\D/g, "");
-        setJumlahAngsuran(numericValue);
-    };
-
-    const handleJumlahPinjamanSetelahPembulatan = (value) => {
-        const numericValue = value.replace(/\D/g, "");
-        setJumlahPinjamanSetelahPembulatan(numericValue);
-    };
-
-    
 
     return (
         <>

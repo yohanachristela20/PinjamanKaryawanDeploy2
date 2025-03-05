@@ -57,11 +57,11 @@ function AngsuranKaryawan() {
     const role = localStorage.getItem("role");
     const username = localStorage.getItem("username");
 
-    console.log("User token: ", token, "User role:", role);
+    // console.log("User token: ", token, "User role:", role);
     try {
       if (!token || !username) return;
 
-      const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
+      const response = await axios.get(`http://10.70.10.144:5000/user-details/${username}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -72,7 +72,7 @@ function AngsuranKaryawan() {
           divisi: response.data.divisi,
           role: response.data.role, 
         });
-        console.log("User data fetched:", response.data);
+        // console.log("User data fetched:", response.data);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -81,7 +81,7 @@ function AngsuranKaryawan() {
 
   const getAngsuran = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/angsuran', {
+      const response = await axios.get('http://10.70.10.144:5000/angsuran', {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -133,7 +133,7 @@ function AngsuranKaryawan() {
     const token = localStorage.getItem('token'); // Ambil token dari localStorage
   
     try {
-      const response = await axios.get("http://localhost:5000/karyawan-data", {
+      const response = await axios.get("http://10.70.10.144:5000/karyawan-data", {
         headers: {
           Authorization: `Bearer ${token}`, 
         },

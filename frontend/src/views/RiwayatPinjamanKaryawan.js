@@ -67,11 +67,11 @@ function RiwayatPinjamanKaryawan() {
     const role = localStorage.getItem("role");
     const username = localStorage.getItem("username");
 
-    console.log("User token: ", token, "User role:", role);
+    // console.log("User token: ", token, "User role:", role);
     try {
       if (!token || !username) return;
 
-      const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
+      const response = await axios.get(`http://10.70.10.144:5000/user-details/${username}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -82,7 +82,7 @@ function RiwayatPinjamanKaryawan() {
           divisi: response.data.divisi,
           role: response.data.role, 
         });
-        console.log("User data fetched:", response.data);
+        // console.log("User data fetched:", response.data);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -91,7 +91,7 @@ function RiwayatPinjamanKaryawan() {
 
   const fetchAntrean = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/antrean-pengajuan", {
+      const response = await axios.get("http://10.70.10.144:5000/antrean-pengajuan", {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -111,22 +111,22 @@ function RiwayatPinjamanKaryawan() {
       }
 
       Promise.all([
-        axios.get("http://localhost:5000/total-pinjaman-keseluruhan", {
+        axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
         }),
-        axios.get("http://localhost:5000/total-peminjam", {
+        axios.get("http://10.70.10.144:5000/total-peminjam", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
         }),
-        axios.get("http://localhost:5000/total-dibayar", {
+        axios.get("http://10.70.10.144:5000/total-dibayar", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
         }), 
-        axios.get("http://localhost:5000/plafond-tersedia", {
+        axios.get("http://10.70.10.144:5000/plafond-tersedia", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -144,7 +144,7 @@ function RiwayatPinjamanKaryawan() {
           const totalPeminjam = responseTotalPeminjam.data.totalPeminjam || 0;
           const totalSudahDibayar = responseTotalDibayar.data.total_dibayar || 0;
   
-          console.log("Sudah dibayar: ",totalSudahDibayar)
+          // console.log("Sudah dibayar: ",totalSudahDibayar)
   
           setPlafondTersedia(responsePlafond.data.plafondTersedia); 
   
@@ -174,7 +174,7 @@ function RiwayatPinjamanKaryawan() {
   const getPinjaman = async () =>{
     try {
       // setLoading(true);
-      const response = await axios.get("http://localhost:5000/pinjaman", {
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman", {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -190,7 +190,7 @@ function RiwayatPinjamanKaryawan() {
   const getAntrean = async () => {
     try {
       // setLoading(true);
-      const response = await axios.get("http://localhost:5000/antrean-pengajuan", {
+      const response = await axios.get("http://10.70.10.144:5000/antrean-pengajuan", {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -219,41 +219,6 @@ function RiwayatPinjamanKaryawan() {
     return rupiah;
 };
 
-const findNomorAntrean = (idPinjaman) => {
-  const antreanItem = antrean.find(item => item.id_pinjaman === idPinjaman);
-  return antreanItem ? antreanItem.nomor_antrean : "-"; // Menampilkan nomor antrean jika ada, jika tidak "-".
-};
-
-  const handleScreeningClick = (pinjaman) => {
-    console.log('Selected Pinjaman:', pinjaman); 
-    history.push({
-      pathname: "/admin/screening-karyawan",
-      state: {selectedPinjaman: pinjaman}
-    }); 
-  };
-
-  const updateNomorAntrean = async (idAntrean, nomorAntreanBaru) => {
-    try {
-      const response = await axios.post('http://localhost:5000/update-antrean', {
-        id_antrean: idAntrean,
-        nomor_antrean_baru: nomorAntreanBaru
-      });
-      console.log(response.data.message); // Menampilkan pesan sukses
-      getAntrean(); // Update data antrean setelah update
-    } catch (error) {
-      console.error('Error updating nomor antrean:', error.message);
-    }
-  };
-
-  const deleteNomorAntrean = async (nomorAntrean) => {
-    try {
-      const response = await axios.delete(`http://localhost:5000/delete-antrean/${nomorAntrean}`);
-      console.log(response.data.message); // Menampilkan pesan sukses
-      getAntrean(); // Update data antrean setelah dihapus
-    } catch (error) {
-      console.error('Error deleting nomor antrean:', error.message);
-    }
-  };
 
   const downloadCSV = (data) => {
     const header = ["id_pinjaman", "tanggal_pengajuan", "nomor_antrean", "jumlah_pinjaman", "jumlah_angsuran", "pinjaman_setelah_pembulatan", "keperluan", "status_pengajuan", "status_transfer", "id_peminjam", "id_asesor"];
@@ -286,7 +251,7 @@ const findNomorAntrean = (idPinjaman) => {
       ];
     });
 
-    console.log("Baris CSV:", rows);
+    // console.log("Baris CSV:", rows);
     
   
     const csvContent = [header, ...rows]
@@ -420,7 +385,7 @@ const findNomorAntrean = (idPinjaman) => {
                       <tbody className="scroll scroller-tbody">
                         { currentItems
                         .map((pinjaman) => {
-                          console.log('Pinjaman AngsuranPinjaman:', pinjaman.SudahDibayar);
+                          // console.log('Pinjaman AngsuranPinjaman:', pinjaman.SudahDibayar);
 
                           const totalSudahDibayar = pinjaman.SudahDibayar
                           ? pinjaman.SudahDibayar.reduce((total, angsuran) => {

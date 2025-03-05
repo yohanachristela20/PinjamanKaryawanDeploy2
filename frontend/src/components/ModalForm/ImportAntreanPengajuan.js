@@ -21,7 +21,7 @@ const ImportAntreanPengajuan = ({showImportModal, setShowImportModal, onSuccess}
     const formData = new FormData();
     formData.append("csvfile", file);
 
-    fetch("http://localhost:5000/pengajuan/import-csv", {
+    fetch("http://10.70.10.144:5000/pengajuan/import-csv", {
       method: "POST",
       body: formData,
       headers: {
@@ -52,7 +52,7 @@ const ImportAntreanPengajuan = ({showImportModal, setShowImportModal, onSuccess}
   };
 
   const downloadCSV = (data) => {
-    const header = ["id_pinjaman", "tanggal_pengajuan", "jumlah_pinjaman", "jumlah_angsuran", "pinjaman_setelah_pembulatan", "keperluan", "id_peminjam", "id_asesor", "bulan_angsuran", "status"];
+    const header = ["id_pinjaman", "tanggal_pengajuan", "jumlah_pinjaman", "jumlah_angsuran", "pinjaman_setelah_pembulatan", "keperluan", "id_peminjam", "id_asesor", "bulan_angsuran", "status_pelunasan"];
   
       try {
         const csvContent = [header]

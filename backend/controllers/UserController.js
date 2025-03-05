@@ -67,7 +67,7 @@ export const updateUser = async (req, res) => {
 const updatePassword = async (id_karyawan, newPassword) => {
     try {
         const response = await axios.patch(
-            `http://localhost:5000/user/${id_karyawan}`,
+            `http://10.70.10.144:5000/user/${id_karyawan}`,
             { password: newPassword },
             {
                 headers: {

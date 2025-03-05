@@ -17,7 +17,7 @@ import axios from "axios";
 //     const sendHeartbeat = () => {
 //       axios
 //         .post(
-//           "http://localhost:5000/heartbeat",
+//           "http://10.70.10.144:5000/heartbeat",
 //           { lastActivityTime: new Date().toISOString() },
 //           {
 //             headers: {
@@ -135,7 +135,7 @@ const sendHeartbeat = () => {
 
   axios
     .post(
-      "http://localhost:5000/heartbeat",
+      "http://10.70.10.144:5000/heartbeat",
       { lastActivityTime: new Date().toISOString() },
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -182,7 +182,7 @@ const handleSessionExpiry = () => {
   // localStorage.removeItem("token");
   stopInactivityTimer();
 
-  axios.post("http://localhost:5000/logout", {}, {
+  axios.post("http://10.70.10.144:5000/logout", {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
@@ -197,23 +197,6 @@ const handleSessionExpiry = () => {
   // window.location.reload();
 };
 
-
-
-// export const resetHeartbeat = () => {
-//   stopHeartbeatFromAdmin();
-//   clearInterval(heartbeatInterval);
-//   // heartbeatInterval = setInterval(sendHeartbeat, 300000); // Set ulang interval
-//   console.log("Heartbeat di-reset.");
-// };
-
-// export const stopHeartbeatFromAdmin = () => {
-//   if (heartbeatInterval) {
-//     clearInterval(heartbeatInterval);
-//     console.log("Heartbeat dihentikan dari AdminNavbar.");
-//     heartbeatInterval = null; // Pastikan interval benar-benar dihentikan
-//   }
-// };
-
 const Heartbeat = () => {
   const history = useHistory();
   const location = useLocation();
@@ -225,22 +208,11 @@ const Heartbeat = () => {
 
     const handleUserActivity = () => {
       lastActivityTime = Date.now();
-      console.log("Last activity time: ", lastActivityTime);
+      // console.log("Last activity time: ", lastActivityTime);
       startInactivityTimer();
     };
 
     startInactivityTimer();
-
-    // if (!heartbeatInterval) {
-    //   heartbeatInterval = setInterval(() => {
-    //     sendHeartbeat();
-    //     const currentTime = Date.now();
-    //     if (currentTime - lastActivityTime > 300000) {
-    //       // 300000 ms = 5 menit
-    //       handleSessionExpiry();
-    //     }
-    //   }, 60000);
-    // }
     
     const events = ["click", "dbclick", "mousemove", "mousedown", "mouseup", "mouseover", "mouseenter", "keydown", "keyup", "keypress", "scroll"];
     events.forEach((event) => {

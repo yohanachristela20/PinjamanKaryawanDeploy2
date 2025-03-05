@@ -67,11 +67,11 @@ function AngsuranFinance() {
       const role = localStorage.getItem("role");
       const username = localStorage.getItem("username");
 
-      console.log("User token: ", token, "User role:", role);
+      // console.log("User token: ", token, "User role:", role);
       try {
         if (!token || !username) return;
 
-        const response = await axios.get(`http://localhost:5000/user-details/${username}`, {
+        const response = await axios.get(`http://10.70.10.144:5000/user-details/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -82,7 +82,7 @@ function AngsuranFinance() {
             divisi: response.data.divisi,
             role: response.data.role, 
           });
-          console.log("User data fetched:", response.data);
+          // console.log("User data fetched:", response.data);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -100,7 +100,7 @@ function AngsuranFinance() {
     const getAngsuran = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/angsuran', {
+        const response = await axios.get('http://10.70.10.144:5000/angsuran', {
           headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -124,14 +124,14 @@ function AngsuranFinance() {
       try {
         setLoading(true);
         const response = await axios.put(
-          `http://localhost:5000/status-update`,
+          `http://10.70.10.144:5000/status-update`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (response.data.alreadyUpdated) {
           toast.error("Angsuran sudah diperbarui bulan ini, tidak perlu memperbarui lagi.");
         } else {
-          console.log("Angsuran berhasil diperbarui:", response.data);
+          // console.log("Angsuran berhasil diperbarui:", response.data);
           toast.success("Angsuran otomatis diperbarui!");
           getAngsuran();
         }
@@ -159,7 +159,7 @@ function AngsuranFinance() {
     
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/karyawan-data", {
+        const response = await axios.get("http://10.70.10.144:5000/karyawan-data", {
           headers: {
             Authorization: `Bearer ${token}`, // Kirim token dalam header Authorization
           },

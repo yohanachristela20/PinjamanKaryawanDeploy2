@@ -6,7 +6,7 @@ import axios from "axios";
 import {FaCheckCircle, FaTimesCircle, FaHistory} from 'react-icons/fa'; 
 import { useHistory } from "react-router-dom";
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'http://10.70.10.144:5000';
 
 export const fetchHistoryPinjaman = async (idPeminjam) => {
   return axios.get(`${BASE_URL}/history-pinjaman/${idPeminjam}`, {
@@ -80,29 +80,29 @@ function ScreeningKaryawan({ setHasilScreening }) {
           responseTotalJumlahPinjaman,
           responsePlafond,
         ] = await Promise.all([
-          axios.get(`http://localhost:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
+          axios.get(`http://10.70.10.144:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get(`http://localhost:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
+          axios.get(`http://10.70.10.144:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get("http://localhost:5000/total-pinjaman-keseluruhan", {
+          axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
              headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
           await axios.get(
-          `http://localhost:5000/plafond-update-saat-ini/${selectedPinjaman.id_pinjaman}`,
+          `http://10.70.10.144:5000/plafond-update-saat-ini/${selectedPinjaman.id_pinjaman}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }),
-          // axios.get("http://localhost:5000/plafond-tersedia", {
+          // axios.get("http://10.70.10.144:5000/plafond-tersedia", {
           //   headers: {
           //     Authorization: `Bearer ${token}`,
           // },
@@ -136,7 +136,7 @@ function ScreeningKaryawan({ setHasilScreening }) {
         localStorage.setItem("hasilScreening", JSON.stringify(hasilScreening)); 
         setScreeningResult(hasilScreening); 
         // console.log("Plafond TERSEDIA: ", plafondTersedia);
-        console.log("Plafond saat ini: ", jumlahPlafondSaatIni);
+        // console.log("Plafond saat ini: ", jumlahPlafondSaatIni);
 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -174,7 +174,7 @@ function ScreeningKaryawan({ setHasilScreening }) {
 
 
   const updatePinjamanStatus = (status) => {
-    axios.put(`http://localhost:5000/pinjaman/cancel/${selectedPinjaman.id_pinjaman}`, {
+    axios.put(`http://10.70.10.144:5000/pinjaman/cancel/${selectedPinjaman.id_pinjaman}`, {
       not_compliant: status, 
     }, {
       headers: {
@@ -192,7 +192,7 @@ function ScreeningKaryawan({ setHasilScreening }) {
 
   const getPlafond = async () =>{
     try {
-      const response = await axios.get("http://localhost:5000/plafond");
+      const response = await axios.get("http://10.70.10.144:5000/plafond");
       setPlafond(response.data);
     } catch (error) {
       console.error("Error fetching data:", error.message); 
@@ -201,7 +201,7 @@ function ScreeningKaryawan({ setHasilScreening }) {
   
   const getPinjaman = async () =>{
     try {
-      const response = await axios.get("http://localhost:5000/pinjaman");
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman");
       setPinjaman(response.data);
     } catch (error) {
       console.error("Error fetching data:", error.message); 
@@ -267,21 +267,21 @@ function ScreeningKaryawan({ setHasilScreening }) {
   const calculateRasioAngsuran = (jumlahPinjaman, gajiPokok) => {
     if (!jumlahPinjaman || !gajiPokok) return 0; 
   
-    console.log("Jumlah pinjaman: ", jumlahPinjaman);
-    console.log("Gaji pokok: ", gajiPokok);
+    // console.log("Jumlah pinjaman: ", jumlahPinjaman);
+    // console.log("Gaji pokok: ", gajiPokok);
   
     const angsuranBulanan = jumlahPinjaman / 60;
     const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
   
-    console.log("Angsuran bulanan: ", angsuranBulanan);
-    console.log("Rasio angsuran (persentase): ", rasioAngsuran);
+    // console.log("Angsuran bulanan: ", angsuranBulanan);
+    // console.log("Rasio angsuran (persentase): ", rasioAngsuran);
   
     return parseFloat(rasioAngsuran.toFixed(2)); 
 
-    console.log(
-      "Rasio angsuran:",
-      calculateRasioAngsuran(selectedPinjaman.jumlah_pinjaman, selectedPinjaman.Peminjam.gaji_pokok)
-    );
+    // console.log(
+    //   "Rasio angsuran:",
+    //   calculateRasioAngsuran(selectedPinjaman.jumlah_pinjaman, selectedPinjaman.Peminjam.gaji_pokok)
+    // );
   };
   
 
@@ -307,9 +307,9 @@ function ScreeningKaryawan({ setHasilScreening }) {
             (latest, current) =>
               current.id_angsuran > latest.id_angsuran ? current : latest
           );
-          console.log(
-            `ID Pinjaman: ${angsuranTerakhir.id_pinjaman}, ID Angsuran Terakhir: ${angsuranTerakhir.id_angsuran}, Belum Dibayar: ${angsuranTerakhir.belum_dibayar}`
-          );
+          // console.log(
+          //   `ID Pinjaman: ${angsuranTerakhir.id_pinjaman}, ID Angsuran Terakhir: ${angsuranTerakhir.id_angsuran}, Belum Dibayar: ${angsuranTerakhir.belum_dibayar}`
+          // );
           return angsuranTerakhir.belum_dibayar; // Ambil hanya nilai belum_dibayar
         })
         .reduce((total, belumDibayar) => total + parseFloat(belumDibayar || 0), 0) // Jumlahkan
@@ -521,7 +521,7 @@ console.log("Total belum dibayar:", totalBelumDibayar);
                           const jumlahPlafondSaatIniParsed = parseFloat(jumlahPlafondSaatIni) || 0;
                           const jumlahPinjamanParsed = parseFloat(selectedPinjaman.jumlah_pinjaman) || 0;
 
-                          console.log("Jumlah plafond saat ini: ", jumlahPlafondSaatIniParsed);
+                          // console.log("Jumlah plafond saat ini: ", jumlahPlafondSaatIniParsed);
 
                           const isDeclined =
                             (selectedPinjaman?.Peminjam.tanggal_masuk &&
@@ -548,24 +548,17 @@ console.log("Total belum dibayar:", totalBelumDibayar);
                             ) : ( */}
                               <DeclineAlert/>
                             {/* )} */}
-                              {console.log('Hasil screening: Decline')}
+                              {/* {console.log('Hasil screening: Decline')} */}
                               {updatePinjamanStatus(1)} 
                             </>
                           ) : (
                             <>
                               <AcceptedAlert selectedPinjaman={selectedPinjaman} totalPinjaman={totalPinjaman} totalSudahDibayar={totalSudahDibayar} />
-                              {console.log('Hasil screening: Accepted')}
+                              {/* {console.log('Hasil screening: Accepted')} */}
                               {updatePinjamanStatus(0)} 
                             </>
                           );
                           
-                          // Simpan hasilScreening untuk penggunaan lebih lanjut (seperti tombol Terima)
-                          // return (
-                          //   <>
-                          //     {hasilScreening}
-                          //     {console.log("hasil screening: ", hasilScreening)}
-                          //   </>
-                          // );
                           return hasilScreening;
                           })()
                         ) : (

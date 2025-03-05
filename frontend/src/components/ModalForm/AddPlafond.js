@@ -10,21 +10,10 @@ const AddPlafond = ({ showAddModal, setShowAddModal, onSuccess }) => {
     const [keterangan, setKeterangan] = useState("");
     const token = localStorage.getItem("token");
 
-    const fetchLatestIdPlafond = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/plafond/latest-id');
-            const latestId = response.data.latestId;
-            const newId = `PL${String(parseInt(latestId.slice(2)) + 1).padStart(3, '0')}`; 
-            setIdPlafond(newId);
-        } catch (error) {
-            console.log("Error fetching latest ID:", error.message);
-        }
-    };
-
     useEffect(() => {
         const fetchNextId = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/plafond/getNextPlafondId', {
+                const response = await axios.get('http://10.70.10.144:5000/plafond/getNextPlafondId', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -46,7 +35,7 @@ const AddPlafond = ({ showAddModal, setShowAddModal, onSuccess }) => {
     const savePlafond = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/plafond', {
+            await axios.post('http://10.70.10.144:5000/plafond', {
                 id_plafond,
                 tanggal_penetapan,
                 jumlah_plafond,
@@ -60,7 +49,7 @@ const AddPlafond = ({ showAddModal, setShowAddModal, onSuccess }) => {
             onSuccess(); 
             
         } catch (error) {
-            console.log(error.message);
+            // console.log(error.message);
             toast.error('Gagal menyimpan data plafond baru.', {
                 position: "top-right",
                 autoClose: 5000,

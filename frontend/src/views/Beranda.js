@@ -121,29 +121,18 @@ function Beranda() {
     // fetchPlafondAngsuran();
   }, []);
 
-  const fetchPlafondAngsuran = async() => {
-      try {
-        const response = await axios.get("http://localhost:5000/plafond-angsuran", {
-          headers: { Authorization: `Bearer ${token}` },
-        }); 
-
-        setPlafondAngsuran(response.data.plafondAngsuran || 0);
-      } catch (error) {
-        console.error("Error fetching plafond angsuran:", error.message);
-      }
-    }; 
 
   const getPinjaman = async () =>{
     try {
       setLoading(true);
-      const response = await axios.get("https://8ae4-103-141-189-170.ngrok-free.app/pinjaman", {
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      withCredentials: true,
+      // withCredentials: true,
       });
       setPinjaman(response.data);
-      console.log("Response pinjaman dari backend:", response.data);
+      // console.log("Response pinjaman dari backend:", response.data);
 
     } catch (error) {
       console.error("Error fetching data:", error.message); 
@@ -155,11 +144,11 @@ function Beranda() {
   const getPinjamanData = async () =>{
     try {
       setLoading(true);
-      const response = await axios.get("https://8ae4-103-141-189-170.ngrok-free.app/pinjaman-data", {
+      const response = await axios.get("http://10.70.10.144:5000/pinjaman-data", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
-      withCredentials: true,
+      // withCredentials: true,
   
       });
       setPinjamanData(response.data);
@@ -175,7 +164,7 @@ function Beranda() {
   const getAntrean = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/antrean-pengajuan", {
+      const response = await axios.get("http://10.70.10.144:5000/antrean-pengajuan", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -192,7 +181,7 @@ function Beranda() {
 
   const fetchAntrean = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/antrean-pengajuan", {
+      const response = await axios.get("http://10.70.10.144:5000/antrean-pengajuan", {
         headers: {
           Authorization: `Bearer ${token}`,
       },
@@ -224,19 +213,19 @@ function Beranda() {
   useEffect(() => {
     const fetchYears = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/filter-piutang", {
+        const response = await axios.get("http://10.70.10.144:5000/filter-piutang", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
   
         const data = response.data;
-        console.log("Data: ", data);
+        // console.log("Data: ", data);
         const uniqueYears = [
           ...new Set(data.map((item) => new Date(item.tanggal_pengajuan).getFullYear())),
         ];
         setYears(uniqueYears.sort()); 
-        console.log("Years: ", uniqueYears);
+        // console.log("Years: ", uniqueYears);
       } catch (error) {
         console.error("Error fetching years:", error.message);
       }
@@ -249,7 +238,7 @@ function Beranda() {
   
       try {
         const response = await axios.get(
-          `http://localhost:5000/user-details/${username}`,
+          `http://10.70.10.144:5000/user-details/${username}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -261,7 +250,7 @@ function Beranda() {
             nama: response.data.nama,
             divisi: response.data.divisi,
           });
-          console.log("User data fetched:", response.data);
+          // console.log("User data fetched:", response.data);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -271,16 +260,16 @@ function Beranda() {
     const fetchSummaryData = async () => {
           try {
             const [responseTotalPinjaman, responseTotalPeminjam, responseTotalDibayar, responsePlafond] = await Promise.all([
-              axios.get("http://localhost:5000/total-pinjaman-keseluruhan", {
+              axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
                 headers: { Authorization: `Bearer ${token}` },
               }),
-              axios.get("http://localhost:5000/total-peminjam", {
+              axios.get("http://10.70.10.144:5000/total-peminjam", {
                 headers: { Authorization: `Bearer ${token}` },
               }),
-              axios.get("http://localhost:5000/total-dibayar", {
+              axios.get("http://10.70.10.144:5000/total-dibayar", {
                 headers: { Authorization: `Bearer ${token}` },
               }),
-              axios.get("http://localhost:5000/latest-plafond-saat-ini", {
+              axios.get("http://10.70.10.144:5000/latest-plafond-saat-ini", {
                 headers: { Authorization: `Bearer ${token}` },
               }),
             ]);
@@ -337,7 +326,7 @@ function Beranda() {
 };
 
   const handleScreeningClick = (pinjaman) => {
-    console.log('Selected Pinjaman:', pinjaman); 
+    // console.log('Selected Pinjaman:', pinjaman); 
     history.push({
       pathname: "/admin/screening-karyawan",
       state: {selectedPinjaman: pinjaman}
@@ -345,7 +334,7 @@ function Beranda() {
   };
 
   const handleTerimaClick = async (pinjaman) => {
-    console.log("Isi userData:", userData);
+    // console.log("Isi userData:", userData);
 
     if (!userData || !userData.id_karyawan) {
       console.error("ID Asesor tidak ditemukan. Pastikan userData diinisialisasi dengan benar.");
@@ -358,16 +347,16 @@ function Beranda() {
     }
 
     try {
-      console.log('Mencoba mengupdate status pengajuan:', pinjaman);
+      // console.log('Mencoba mengupdate status pengajuan:', pinjaman);
   
       const payload = {
         status_pengajuan: "Diterima",
         id_asesor: userData.id_karyawan,
       };
 
-      console.log("Payload yang dikirim ke server:", payload);
+      // console.log("Payload yang dikirim ke server:", payload);
 
-      const response = await axios.put(`http://localhost:5000/pengajuan/${pinjaman.id_pinjaman}`, {
+      const response = await axios.put(`http://10.70.10.144:5000/pengajuan/${pinjaman.id_pinjaman}`, {
         status_pengajuan: "Diterima",
 
       }, {
@@ -376,7 +365,7 @@ function Beranda() {
       },
       });
   
-      console.log('Status pengajuan diperbarui:', response.data);
+      // console.log('Status pengajuan diperbarui:', response.data);
   
       toast.success('Status pengajuan berhasil diperbarui!', {
         position: "top-right", 
@@ -445,7 +434,7 @@ function Beranda() {
       ];
     });
 
-    console.log("Baris CSV:", rows);
+    // console.log("Baris CSV:", rows);
     
   
     const csvContent = [header, ...rows]
@@ -531,7 +520,7 @@ function Beranda() {
 
   const dataPinjaman = async (selectedYear) => {
     try {
-      const response = await axios.get("http://localhost:5000/data-pinjaman", {
+      const response = await axios.get("http://10.70.10.144:5000/data-pinjaman", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -573,9 +562,9 @@ function Beranda() {
         const tahun = selectedYear || new Date().getFullYear();
         const bulan = selectedMonth === "" ? undefined : selectedMonth.padStart(2, '0');
 
-        console.log("Params:", { departemen: selectedDepartemen, bulan, tahun });
+        // console.log("Params:", { departemen: selectedDepartemen, bulan, tahun });
 
-        const response = await axios.get("http://localhost:5000/data-divisi", {
+        const response = await axios.get("http://10.70.10.144:5000/data-divisi", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -618,9 +607,9 @@ function Beranda() {
     }
 };
 
-console.log("Plafond saat ini: ", latestPlafond);
-console.log("Plafond angsuran: ", plafondAngsuran);
-console.log("Total sudah dibayar: ", totalDibayar); 
+// console.log("Plafond saat ini: ", latestPlafond);
+// console.log("Plafond angsuran: ", plafondAngsuran);
+// console.log("Total sudah dibayar: ", totalDibayar); 
 
   return (
     <>
