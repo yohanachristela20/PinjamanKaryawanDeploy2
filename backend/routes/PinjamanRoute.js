@@ -212,8 +212,8 @@ router.get("/plafond-saat-ini", async (req, res) => {
     if (plafondUpdate) {
       const updatePlafondPinjaman = parseFloat(plafondUpdate.plafond_saat_ini);
 
-      const latestPlafond = await Plafond.findOne({
-        order: [["id_plafond", "DESC"]],
+      const latestPlafond = await PlafondUpdate.findOne({
+        order: [["id_plafondupdate", "DESC"]],
       });
   
       if (!latestPlafond) {
@@ -247,15 +247,15 @@ router.get("/plafond-saat-ini", async (req, res) => {
       });
     }
 
-    const latestPlafond = await Plafond.findOne({
-      order: [["id_plafond", "DESC"]],
+    const latestPlafond = await PlafondUpdate.findOne({
+      order: [["id_plafondupdate", "DESC"]],
     });
 
     if (!latestPlafond) {
       return res.status(404).json({ message: "Data plafond tidak ditemukan" });
     }
 
-    const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
+    const plafondAwal = parseFloat(latestPlafond.plafond_saat_ini);
     console.log("Plafond awal: ", plafondAwal);
     console.log("Stored jumlah pinjaman: ", storedJumlahPinjaman);
     const plafondSaatIni = plafondAwal - storedJumlahPinjaman;
@@ -306,59 +306,166 @@ router.get("/plafond-update-saat-ini/:id_pinjaman", async (req, res) => {
 });
 
 // Untuk Beranda dan Laporan Piutang Admin-Finance (Ambil plafond update terakhir dari db)
+// router.get("/latest-plafond-saat-ini", async (req, res) => {
+//   try {
+//     const latestPinjaman = await Pinjaman.findOne({
+//       where: { status_transfer: "Selesai" },  
+//       order: [["id_pinjaman", "DESC"]],
+//     });
+
+//     if (!latestPinjaman) {
+//       const latestPlafond = await PlafondUpdate.findOne({
+//         order: [["id_plafondupdate", "DESC"]],
+//       });
+
+//       if (!latestPlafond) {
+//         return res.status(404).json({ message: "Data plafond tidak ditemukan" });
+//       }
+
+//       const plafondAwal = parseFloat(latestPlafond.plafond_saat_ini);
+//       console.log("Plafond awal:", plafondAwal);
+//       return res.status(200).json({ latestPlafond: plafondAwal });
+//     }
+
+//     const id_pinjaman = latestPinjaman.id_pinjaman;
+
+//     const plafondUpdate = await PlafondUpdate.findOne({
+//       where: { id_pinjaman },
+//       attributes: ["plafond_saat_ini"],
+//     });
+
+//     if (plafondUpdate) {
+//       const plafondSaatIni = parseFloat(plafondUpdate.plafond_saat_ini);
+//       console.log("Data plafond saat ini:", plafondSaatIni);
+//       const latestPlafond = (plafondSaatIni);
+//       return res.status(200).json({ latestPlafond });
+
+
+//     } else {
+//       const latestPlafond = await Plafond.findOne({
+//         order: [["id_plafond", "DESC"]],
+//       });
+  
+//       if (!latestPlafond) { 
+//         return res.status(404).json({ message: "Data plafond tidak ditemukan" });
+//       }
+  
+//       const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
+//       console.log("Plafond awal:", plafondAwal);
+//       return res.status(200).json({ latestPlafond: plafondAwal });
+//     }
+//   } catch (error) {
+//     console.error("Error fetching plafond data:", error.message);
+//     res.status(500).json({ message: "Internal server error", error: error.message });
+//   }
+// });
+
 router.get("/latest-plafond-saat-ini", async (req, res) => {
   try {
+    let latestPlafondValue = null;
+
+    // Ambil pinjaman terbaru dengan status_transfer "Selesai"
     const latestPinjaman = await Pinjaman.findOne({
-      where: { status_transfer: "Selesai" },  
       order: [["id_pinjaman", "DESC"]],
-    });
+      raw: true,
+    });  
 
-    if (!latestPinjaman) {
-      const latestPlafond = await Plafond.findOne({
-        order: [["id_plafond", "DESC"]],
+    if (latestPinjaman) {
+      console.log("Latest Pinjaman:", latestPinjaman.id_pinjaman);
+
+      // Cek status_pengajuan dan status_transfer dari latestPinjaman
+      const pinjamanStatus = await Pinjaman.findOne({
+        where: { id_pinjaman: latestPinjaman.id_pinjaman },
+        attributes: ["status_transfer"],
+        raw: true,
       });
 
-      if (!latestPlafond) {
-        return res.status(404).json({ message: "Data plafond tidak ditemukan" });
-      }
+      console.log("Status Pinjaman:", pinjamanStatus);
 
-      const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
-      console.log("Plafond awal:", plafondAwal);
-      return res.status(200).json({ latestPlafond: plafondAwal });
+      if (
+        pinjamanStatus?.status_transfer !== "Selesai"
+      ) {
+        console.log("Pinjaman terakhir BELUM ditransfer.");
+
+        // Ambil plafond terbaru dari id_pinjaman = null
+        const latestPlafondNull = await PlafondUpdate.findOne({
+          attributes: ["plafond_saat_ini"],
+          where: { id_pinjaman: null },
+          order: [["id_plafondupdate", "DESC"]],
+          raw: true,
+        });
+
+        latestPlafondValue = latestPlafondNull?.plafond_saat_ini || null;
+        console.log("Plafond dari id_pinjaman NULL:", latestPlafondValue);
+      } else {
+        // Jika pinjaman sudah "Diterima" dan "Selesai", cari plafond dari PlafondUpdate
+        const plafondUpdate = await PlafondUpdate.findOne({
+          where: { id_pinjaman: latestPinjaman.id_pinjaman },
+          attributes: ["plafond_saat_ini"],  
+          raw: true,
+        });
+
+        latestPlafondValue = plafondUpdate?.plafond_saat_ini || null;
+        console.log("Plafond dari PlafondUpdate:", latestPlafondValue);
+      }
     }
 
-    const id_pinjaman = latestPinjaman.id_pinjaman;
-
-    const plafondUpdate = await PlafondUpdate.findOne({
-      where: { id_pinjaman },
-      attributes: ["plafond_saat_ini"],
-    });
-
-    if (plafondUpdate) {
-      const plafondSaatIni = parseFloat(plafondUpdate.plafond_saat_ini);
-      console.log("Data plafond saat ini:", plafondSaatIni);
-      const latestPlafond = (plafondSaatIni);
-      return res.status(200).json({ latestPlafond });
-
-
-    } else {
-      const latestPlafond = await Plafond.findOne({
-        order: [["id_plafond", "DESC"]],
+    // Jika latestPlafondValue masih null, cari plafond terbaru yang sudah diterima dan selesai transfer
+    if (latestPlafondValue) {
+      const latestPlafond = await PlafondUpdate.findOne({
+        include: [
+          {
+            model: Pinjaman,
+            as: "UpdatePinjamanPlafond",
+            attributes: ["status_pengajuan", "status_transfer"],
+            where: { status_pengajuan: "Diterima", status_transfer: "Selesai" },
+            required: true, // Pastikan hanya yang sudah diterima & selesai
+          },
+        ],
+        attributes: ["plafond_saat_ini"],
+        order: [["id_pinjaman", "DESC"]],
+        raw: true,
       });
-  
-      if (!latestPlafond) { 
-        return res.status(404).json({ message: "Data plafond tidak ditemukan" });
-      }
-  
-      const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
-      console.log("Plafond awal:", plafondAwal);
-      return res.status(200).json({ latestPlafond: plafondAwal });
+
+      latestPlafondValue = latestPlafond?.plafond_saat_ini || null;
+      console.log("Plafond dari pinjaman yang sudah diterima & selesai:", latestPlafondValue);
     }
+
+    // Jika masih null, ambil dari Plafond utama
+    if (!latestPlafondValue) {
+      // const latestPlafondFromPlafond = await Plafond.findOne({
+      //   order: [["id_plafond", "DESC"]],
+      //   attributes: ["jumlah_plafond"],
+      //   raw: true,
+      // });
+
+      // latestPlafondValue = latestPlafondFromPlafond?.jumlah_plafond || null;
+      const latestPlafondNull = await PlafondUpdate.findOne({
+          attributes: ["plafond_saat_ini"],
+          where: { id_pinjaman: null },
+          order: [["id_plafondupdate", "DESC"]],
+          raw: true,
+        });
+
+        latestPlafondValue = latestPlafondNull?.plafond_saat_ini || null;
+      console.log("Plafond dari tabel Plafond:", latestPlafondValue);
+    }
+
+    // Jika tetap tidak ada data, kirim respon 404
+    if (!latestPlafondValue) {
+      return res.status(404).json({ message: "Data plafond tidak ditemukan" });
+    }
+
+    console.log("Latest Plafond:", parseFloat(latestPlafondValue));
+    return res.status(200).json({ latestPlafond: parseFloat(latestPlafondValue) });
+
   } catch (error) {
     console.error("Error fetching plafond data:", error.message);
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
+
+
 
 // Untuk Beranda Admin
 router.get("/plafond-angsuran", async (req, res) => {
