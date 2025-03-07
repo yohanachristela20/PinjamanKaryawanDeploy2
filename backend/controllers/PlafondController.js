@@ -52,14 +52,14 @@ export const createPlafond = async(req, res) => {
         const newPlafond = await Plafond.create(req.body, { transaction });
 
         const plafondTerakhir = await PlafondUpdate.findOne({
-            // include: [
-            //     {
-            //         model: Pinjaman,
-            //         as: "UpdatePinjamanPlafond",
-            //         attributes: ["status_pengajuan", "status_transfer"],
-            //         where: { status_pengajuan: "Diterima", status_transfer: "Selesai" },
-            //     },
-            // ],
+            include: [
+                {
+                    model: Pinjaman,
+                    as: "UpdatePinjamanPlafond",
+                    attributes: ["status_pengajuan", "status_transfer"],
+                    where: { status_pengajuan: "Diterima", status_transfer: "Selesai" },
+                },
+            ],
             attributes: ["id_pinjaman", "plafond_saat_ini"],
             order: [["id_pinjaman", "DESC"]],
             raw: true,
