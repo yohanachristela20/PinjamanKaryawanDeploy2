@@ -5,8 +5,6 @@ import { getAntrean,
 } from "../controllers/AntreanPengajuanController.js";
 import AntreanPengajuan from "../models/AntreanPengajuanModel.js";
 import Pinjaman from "../models/PinjamanModel.js";
-import PlafondUpdate from "../models/PlafondUpdateModel.js";
-
 
 const router = express.Router();
 
@@ -86,15 +84,12 @@ router.put('/update-status-antrean/:id', async (req, res) => {
 
 router.post('/add-antrean', async (req, res) => {
   try {
-      // Ambil antrean terakhir berdasarkan nomor antrean
       const lastAntrean = await AntreanPengajuan.findOne({
           order: [['nomor_antrean', 'DESC']],
       });
 
-      // Tentukan nomor antrean baru
       const newNomorAntrean = lastAntrean ? lastAntrean.nomor_antrean + 1 : 1;
 
-      // Buat antrean baru dengan nomor antrean yang dihitung
       const newAntrean = await AntreanPengajuan.create({
           ...req.body,
           nomor_antrean: newNomorAntrean,
@@ -129,10 +124,8 @@ router.get("/antrean-pengajuan", async (req, res) => {
             order: [["nomor_antrean", "ASC"]], 
         }); 
 
-        // console.log("Fetched antrean from database: ", antrean);
         res.json(antrean);
     } catch (error) {
-        // console.error("Error fetching antrean:", error.message);
         res.status(500).json({ error: "Terjadi kesalahan pada server" });
     }
 });

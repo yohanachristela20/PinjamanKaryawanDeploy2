@@ -36,9 +36,8 @@ export const createAntrean = async(req, res) => {
 }
 
 export const processAntreanAutomatically = async () => {
-    const transaction = await db.transaction(); // Gunakan transaksi
+    const transaction = await db.transaction(); 
     try {
-        // Ambil antrean dengan nomor 1 dan status sesuai
         const antrean = await AntreanPengajuan.findOne({
             include: [
                 {
@@ -51,17 +50,15 @@ export const processAntreanAutomatically = async () => {
                 },
             ],
             order: [["nomor_antrean", "ASC"]],
-            transaction, // Gunakan transaksi
+            transaction, 
         });
 
         if (antrean) {
             const nomorAntreanToDelete = antrean.nomor_antrean;
             console.log(`Menghapus antrean dengan nomor_antrean ${nomorAntreanToDelete}...`);
 
-            // Hapus antrean
             await antrean.destroy({ transaction });
 
-            // Geser antrean yang tersisa
             const remainingAntrean = await AntreanPengajuan.findAll({
                 where: {
                     nomor_antrean: {

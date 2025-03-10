@@ -95,62 +95,6 @@ router.get("/total-dibayar", async (req, res) => {
         }
 }); 
 
-// router.post('/angsuran/import-csv', upload.single("csvfile"), (req,res) => {
-//         if (!req.file) {
-//                 return res.status(400).json({ success: false, message: 'No file uploaded' });
-//         }
-        
-//         const filePath = req.file.path;
-//         const angsuran_data = [];
-        
-//         fs.createReadStream(filePath)
-//         .pipe(csvParser())
-//         .on("data", (row) => {
-//             angsuran_data.push({
-//             id_angsuran: row.id_angsuran,
-//             tanggal_angsuran: new Date(row.tanggal_angsuran),
-//             bulan_angsuran: row.bulan_angsuran,
-//             keterangan: row.keterangan,
-//             status: row.status,
-//             sudah_dibayar: parseInt(row.sudah_dibayar, 10),
-//             belum_dibayar: parseInt(row.belum_dibayar, 10),
-//         //     rasio_angsuran: parseInt(row.rasio_angsuran, 10),
-//             id_peminjam: row.id_peminjam,
-//             id_pinjaman: row.id_pinjaman,
-//           });
-//         })
-//         .on("end", async () => {
-//           try {
-//             if (angsuran_data.length === 0) {
-//               throw new Error("Tidak ada data untuk diimpor");
-//             }
-        
-//             // Menggunakan model Plafond untuk menyimpan data
-//             await Angsuran.bulkCreate(angsuran_data);
-        
-//             res.status(200).json({
-//               success: true,
-//               message: "Data berhasil diimpor ke database",
-//             });
-//           } catch (error) {
-//             console.error("Error importing data:", error);
-//             res.status(500).json({
-//               success: false,
-//               message: "Gagal mengimpor data ke database",
-//               error: error.message,
-//             });
-//           } finally {
-//             fs.unlinkSync(filePath);
-//           }
-//         })
-//         .on("error", (error) => {
-//           console.error("Error parsing file:", error);
-//           res.status(500).json({ success: false, message: "Error parsing file" });
-//         });
-        
-// });
-
-
 router.post('/angsuran/import-csv', upload.single("csvfile"), async (req,res) => {
     if (!req.file) {
         return res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -171,7 +115,6 @@ router.post('/angsuran/import-csv', upload.single("csvfile"), async (req,res) =>
         sudah_dibayar: parseFloat(row.sudah_dibayar),
         belum_dibayar: parseFloat(row.belum_dibayar),
         sudah_dihitung: true,
-    //     rasio_angsuran: parseInt(row.rasio_angsuran, 10),
         status:  parseFloat(row.belum_dibayar) <=0 ? 'Lunas' : 'Belum Lunas',
         id_peminjam: row.id_peminjam,
         id_pinjaman: row.id_pinjaman,
@@ -264,7 +207,6 @@ router.post('/angsuran/import-csv', upload.single("csvfile"), async (req,res) =>
             }
           }
   
-          // Commit transaksi jika semua berhasil
           await transaction.commit();
 
           await Angsuran.update(
@@ -371,10 +313,7 @@ router.get('/angsuran-berikutnya', async (req, res) => {
   try {
       const nextMonthDate = new Date();
       nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
-      const nextMonthYear = nextMonthDate.getFullYear();
-      const nextMonth = String(nextMonthDate.getMonth() + 1).padStart(2, "0");
 
-      // Ambil data angsuran yang belum lunas
       const angsuranData = await Angsuran.findAll({
           include: [
               {
@@ -396,7 +335,6 @@ router.get('/angsuran-berikutnya', async (req, res) => {
           order: [["id_pinjaman", "ASC"], ["id_angsuran", "DESC"]],
       });
 
-      // Jika tidak ada data angsuran ditemukan
       if (!angsuranData || angsuranData.length === 0) {
           return res.status(404).json({ message: "Tidak ada data angsuran untuk dihitung." });
       }

@@ -53,7 +53,6 @@ const activeUsers = {};
 //     }
 // };
 
-
 const checkSessionTimeout = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
 
@@ -73,7 +72,8 @@ const checkSessionTimeout = (req, res, next) => {
         if (userSession) {
             const { lastActivity, heartbeatCount } = userSession;
 
-            // Jika sudah tidak aktif lebih dari 3 menit atau heartbeatCount > 3
+            // Jika sudah tidak aktif lebih dari 5 menit atau heartbeatCount > 3
+            // 300000 = 60000*5
             if (heartbeatCount === null || heartbeatCount > 1 || (currentTime - lastActivity) > 300000) {
                 clearUserSession(userId);
                 console.log(`Sesi pengguna ${userId} berakhir.`);
@@ -81,11 +81,9 @@ const checkSessionTimeout = (req, res, next) => {
                 return res.status(401).json({ redirect: '/login'});
             }
 
-            // Perbarui aktivitas terakhir
             activeUsers[userId].lastActivity = currentTime;
 
         } else {
-            // Tambahkan sesi pengguna baru
             activeUsers[userId] = {
                 lastActivity: currentTime,
                 heartbeatCount: 0,

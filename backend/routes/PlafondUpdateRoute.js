@@ -1,8 +1,6 @@
 import express from "express";
-import db from "../config/database.js";
 import PlafondUpdate from "../models/PlafondUpdateModel.js";
 import Pinjaman from "../models/PinjamanModel.js"
-import Angsuran from "../models/AngsuranModel.js";
 
 import {getPlafondUpdate,
         getPlafondUpdateById, 

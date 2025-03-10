@@ -13,9 +13,7 @@ import { Sequelize, Op, where } from "sequelize";
 import {getPlafond,
         getPlafondById, 
         createPlafond, 
-        // updatePlafond, 
         getLastPlafondId,
-        // deletePlafond,
         getJumlahPlafond,
 } from "../controllers/PlafondController.js"; 
 
@@ -42,61 +40,7 @@ router.get('/plafond', getPlafond);
 router.get('/jumlah-plafond', getJumlahPlafond);
 router.get('/plafond/:id_plafond', getPlafondById);
 router.post('/plafond', createPlafond);  
-// router.patch('/plafond/:id_plafond', updatePlafond);
 router.get('/plafond/getNextPlafondId', getLastPlafondId);
-// router.delete('/plafond/:id_plafond', deletePlafond);
-
-// router.post('/plafond/import-csv', upload.single("csvfile"), (req,res) => {
-// if (!req.file) {
-//         return res.status(400).json({ success: false, message: 'No file uploaded' });
-// }
-
-// const filePath = req.file.path;
-// const plafonds = [];
-
-// fs.createReadStream(filePath)
-// .pipe(csvParser())
-// .on("data", (row) => {
-//   plafonds.push({
-//     id_plafond: row.id_plafond,
-//     tanggal_penetapan: new Date(row.tanggal_penetapan),
-//     jumlah_plafond: parseInt(row.jumlah_plafond, 10),
-//     keterangan: row.keterangan,
-//     createdAt: new Date(row.createdAt),
-//     updatedAt: new Date(row.updatedAt)
-//   });
-  
-// })
-// .on("end", async () => {
-//   try {
-//     if (plafonds.length === 0) {
-//       throw new Error("Tidak ada data untuk diimpor");
-//     }
-
-//     // Menggunakan model Plafond untuk menyimpan data
-//     await Plafond.bulkCreate(plafonds);
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Data berhasil diimpor ke database",
-//     });
-//   } catch (error) {
-//     console.error("Error importing data:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Gagal mengimpor data ke database",
-//       error: error.message,
-//     });
-//   } finally {
-//     fs.unlinkSync(filePath);
-//   }
-// })
-// .on("error", (error) => {
-//   console.error("Error parsing file:", error);
-//   res.status(500).json({ success: false, message: "Error parsing file" });
-// });
-
-// });
 
 router.post('/plafond/import-csv', upload.single("csvfile"), async (req, res) => {
   if (!req.file) {
@@ -124,14 +68,8 @@ router.post('/plafond/import-csv', upload.single("csvfile"), async (req, res) =>
         if (plafonds.length === 0) {
           throw new Error("Tidak ada data untuk diimpor");
         }
-
-        // Simpan data plafonds ke database
         await Plafond.bulkCreate(plafonds, { transaction });
-
-        // Total penambahan plafond dari file CSV
         const totalPlafond = plafonds.reduce((sum, item) => sum + item.jumlah_plafond, 0);
-
-        // Ambil plafond terakhir yang tersedia
         const plafondTerakhir = await PlafondUpdate.findOne({
           include: [
             {
@@ -148,19 +86,31 @@ router.post('/plafond/import-csv', upload.single("csvfile"), async (req, res) =>
         });
 
         if (!plafondTerakhir) {
-          console.log("Data plafond terakhir tidak ditemukan.");
-          return res.status(404).json({ success: false, message: "Plafond terakhir tidak ditemukan" });
+          console.log("Tidak ada data plafond terakhir, menginisialisasi dengan nilai default.");
         }
 
-        let plafondBaru = parseFloat(plafondTerakhir.plafond_saat_ini || 0) + totalPlafond;
+        const plafondTerakhirSaatIni = plafondTerakhir?.plafond_saat_ini || 0;
+        console.log("Plafond terakhir sebelum update: ", plafondTerakhirSaatIni);
 
-        // Update plafond_saat_ini
-        await PlafondUpdate.update(
-          { plafond_saat_ini: plafondBaru },
-          { where: { id_pinjaman: plafondTerakhir.id_pinjaman }, transaction }
-        );
+        let plafondBaru = parseFloat(plafondTerakhir?.plafond_saat_ini || 0) + totalPlafond;
 
-        // Ambil antrean pinjaman
+        if (plafondTerakhir && plafondTerakhir.id_pinjaman) {
+          await PlafondUpdate.update(
+              { plafond_saat_ini: plafondBaru },
+              { where: { id_pinjaman: plafondTerakhir.id_pinjaman }, transaction }
+          );
+        } else {
+            let today = new Date();
+            let formattedToday = today.toISOString().split("T")[0]; 
+            await PlafondUpdate.create(
+                { 
+                    plafond_saat_ini: plafondBaru,
+                    tanggal_plafond_tersedia: formattedToday,
+                }, 
+                {transaction}
+            );
+        }
+
         const antreans = await AntreanPengajuan.findAll({
           attributes: ['nomor_antrean', 'id_pinjaman'],
           order: [['nomor_antrean', 'ASC']],
@@ -168,7 +118,6 @@ router.post('/plafond/import-csv', upload.single("csvfile"), async (req, res) =>
         });
 
         if (antreans.length > 0) {
-          // Ambil detail pinjaman untuk antrean
           const antreanData = await Pinjaman.findAll({
             where: {
               id_pinjaman: { [Op.in]: antreans.map(antrean => antrean.id_pinjaman) },
@@ -199,7 +148,6 @@ router.post('/plafond/import-csv', upload.single("csvfile"), async (req, res) =>
           }
         }
 
-        // Commit transaksi jika semua berhasil
         await transaction.commit();
 
         res.status(200).json({

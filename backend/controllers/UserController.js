@@ -64,25 +64,6 @@ export const updateUser = async (req, res) => {
 
 
 
-const updatePassword = async (id_karyawan, newPassword) => {
-    try {
-        const response = await axios.patch(
-            `http://10.70.10.144:5000/user/${id_karyawan}`,
-            { password: newPassword },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
-
-        alert(response.data.msg);
-    } catch (error) {
-        console.error("Error updating password:", error);
-        alert("Gagal memperbarui password.");
-    }
-};
-
 export const deleteUser = async(req, res) => {
     try {
         await User.destroy({

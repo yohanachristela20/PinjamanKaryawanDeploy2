@@ -42,7 +42,7 @@ const Pinjaman = db.define('pinjaman', {
             const lastRecord = await Pinjaman.findOne({
                 order: [['id_pinjaman', 'DESC']]
             }); 
-            let newId = "P00001"; //default id
+            let newId = "P00001";
 
             if (lastRecord && lastRecord.id_pinjaman) {
                 const lastIdNumber = parseInt(lastRecord.id_pinjaman.substring(1), 10); 

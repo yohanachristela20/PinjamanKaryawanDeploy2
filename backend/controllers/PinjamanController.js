@@ -5,8 +5,6 @@ import AntreanPengajuan from "../models/AntreanPengajuanModel.js";
 import PlafondUpdate from "../models/PlafondUpdateModel.js";
 import db from "../config/database.js";
 import { Sequelize, Op, where } from "sequelize";
-import { format } from "sequelize/lib/utils";
-
 
 export const getPinjaman = async(req, res) => {
     try {
@@ -155,7 +153,7 @@ export const createPinjaman = async (req, res) => {
             }
         });
     } catch (error) {
-        await transaction.rollback(); // Rollback transaksi jika terjadi kesalahan
+        await transaction.rollback(); 
         console.error("Error creating pinjaman:", error); 
 
         if (error.errors) {

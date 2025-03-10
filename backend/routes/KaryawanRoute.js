@@ -72,7 +72,6 @@ router.post('/karyawan/import-csv', upload.single("csvfile"), (req,res) => {
               throw new Error("Tidak ada data untuk diimpor");
             }
         
-            // Menggunakan model Plafond untuk menyimpan data
             await Karyawan.bulkCreate(data_karyawan);
         
             res.status(200).json({

@@ -19,10 +19,6 @@ export const getJumlahPlafond = async(req, res) => {
     try {
 
         const totalPlafond = await Plafond.sum("jumlah_plafond");
-        // console.log("Total plafond: ", totalPlafond);
-
-        // const response = totalPlafond;
-        // console.log("Response: ", response);
         res.status(200).json({ totalPlafond }); 
     } catch (error) {
         console.log(error.message); 
@@ -71,13 +67,7 @@ export const createPlafond = async(req, res) => {
 
         const plafondTerakhirSaatIni = plafondTerakhir?.plafond_saat_ini || 0;
 
-        // if (!plafondTerakhir) {
-        //     console.log("Data plafond terakhir tidak ditemukan.");
-        //     return;
-        // }
-
         console.log("Plafond terakhir sebelum update: ", plafondTerakhirSaatIni);
-
 
         const totalAngsuranHarusDibayar = await Pinjaman.sum("jumlah_angsuran", {
             where: {
@@ -114,8 +104,6 @@ export const createPlafond = async(req, res) => {
             attributes: ['nomor_antrean', 'id_pinjaman'],
             order: [['nomor_antrean', 'ASC']],
         });
-
-        // if (antreans.length === 0) return;
 
         console.log("Antreans: ", antreans);
 
@@ -178,14 +166,9 @@ export const createPlafond = async(req, res) => {
                         where: { id_pinjaman: antrean.id_pinjaman}, 
                         transaction
                     }, 
-                    
-                );
-                    
+                );       
             }
-        
-          
         }
-
         await transaction.commit();
         res.status(201).json({msg: "Data Plafond baru telah dibuat", data: {newPlafond}}); 
     } catch (error) {

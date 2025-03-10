@@ -159,11 +159,8 @@ export const createAngsuran = async (req, res) => {
                         where: { id_pinjaman: antrean.id_pinjaman },
                         transaction,
                     }
-                );
-                    
+                ); 
             }
-        
-          
         }
         await transaction.commit();
         res.status(201).json({
@@ -179,7 +176,6 @@ export const createAngsuran = async (req, res) => {
 
 export const updateAngsuran = async(req, res) => {
     try {
-        // console.log(req.body);
         await Angsuran.update(req.body, {
             where:{
                 id_angsuran: req.params.id_angsuran

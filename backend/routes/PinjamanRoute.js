@@ -3,7 +3,6 @@ import { createPinjaman,
          getPinjaman,
          getPinjamanById,
          getPinjamanData,
-         getTotalPinjamanByPeminjam, 
          getDataPinjaman,
          filterPiutangTahunan,
          getDataPerDivisi,
@@ -21,7 +20,6 @@ import csvParser from "csv-parser";
 import db from "../config/database.js";
 import Pinjaman from "../models/PinjamanModel.js";
 import AntreanPengajuan from "../models/AntreanPengajuanModel.js";
-import verifyToken from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -155,15 +153,6 @@ router.get("/plafond-tersedia", async (req, res) => {
 
 router.get("/plafond-tersisa", async (req, res) => {
   try {
-    // const totalPinjamanKeseluruhan = (await Pinjaman.sum("jumlah_pinjaman", {
-    //   where: {
-    //     status_pengajuan: "Diterima",
-    //     status_transfer: "Selesai",
-    //   },
-    // })) || 0;
-
-    // const totalSudahDibayar = (await Angsuran.sum("sudah_dibayar")) || 0;
-   
     const plafond = await PlafondUpdate.findOne({
       order: [["id_plafondupdate", "DESC"]],
     });
@@ -206,8 +195,6 @@ router.get("/plafond-saat-ini", async (req, res) => {
     });
 
     let totalDibayar = 0;
-    let statusPinjaman = "Tidak Memiliki Pinjaman Aktif";
-    let pinjamanInfo = "Tidak ada informasi pinjaman.";
 
     if (plafondUpdate) {
       const updatePlafondPinjaman = parseFloat(plafondUpdate.plafond_saat_ini);
@@ -226,11 +213,9 @@ router.get("/plafond-saat-ini", async (req, res) => {
         ], 
         raw: true,
       });
-      // console.log("Angsuran belum dihitung:", angsuranBelumDihitung);
 
       totalDibayar = parseFloat(angsuranBelumDihitung[0]?.total_dibayar || 0);
 
-      // console.log("Total Dibayar backend:", totalDibayar);
       const plafondSaatIni =
         updatePlafondPinjaman - storedJumlahPinjaman;
 
@@ -305,61 +290,6 @@ router.get("/plafond-update-saat-ini/:id_pinjaman", async (req, res) => {
   }
 });
 
-// Untuk Beranda dan Laporan Piutang Admin-Finance (Ambil plafond update terakhir dari db)
-// router.get("/latest-plafond-saat-ini", async (req, res) => {
-//   try {
-//     const latestPinjaman = await Pinjaman.findOne({
-//       where: { status_transfer: "Selesai" },  
-//       order: [["id_pinjaman", "DESC"]],
-//     });
-
-//     if (!latestPinjaman) {
-//       const latestPlafond = await PlafondUpdate.findOne({
-//         order: [["id_plafondupdate", "DESC"]],
-//       });
-
-//       if (!latestPlafond) {
-//         return res.status(404).json({ message: "Data plafond tidak ditemukan" });
-//       }
-
-//       const plafondAwal = parseFloat(latestPlafond.plafond_saat_ini);
-//       console.log("Plafond awal:", plafondAwal);
-//       return res.status(200).json({ latestPlafond: plafondAwal });
-//     }
-
-//     const id_pinjaman = latestPinjaman.id_pinjaman;
-
-//     const plafondUpdate = await PlafondUpdate.findOne({
-//       where: { id_pinjaman },
-//       attributes: ["plafond_saat_ini"],
-//     });
-
-//     if (plafondUpdate) {
-//       const plafondSaatIni = parseFloat(plafondUpdate.plafond_saat_ini);
-//       console.log("Data plafond saat ini:", plafondSaatIni);
-//       const latestPlafond = (plafondSaatIni);
-//       return res.status(200).json({ latestPlafond });
-
-
-//     } else {
-//       const latestPlafond = await Plafond.findOne({
-//         order: [["id_plafond", "DESC"]],
-//       });
-  
-//       if (!latestPlafond) { 
-//         return res.status(404).json({ message: "Data plafond tidak ditemukan" });
-//       }
-  
-//       const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
-//       console.log("Plafond awal:", plafondAwal);
-//       return res.status(200).json({ latestPlafond: plafondAwal });
-//     }
-//   } catch (error) {
-//     console.error("Error fetching plafond data:", error.message);
-//     res.status(500).json({ message: "Internal server error", error: error.message });
-//   }
-// });
-
 router.get("/latest-plafond-saat-ini", async (req, res) => {
   try {
     let latestPlafondValue = null;
@@ -433,13 +363,6 @@ router.get("/latest-plafond-saat-ini", async (req, res) => {
 
     // Jika masih null, ambil dari Plafond utama
     if (!latestPlafondValue) {
-      // const latestPlafondFromPlafond = await Plafond.findOne({
-      //   order: [["id_plafond", "DESC"]],
-      //   attributes: ["jumlah_plafond"],
-      //   raw: true,
-      // });
-
-      // latestPlafondValue = latestPlafondFromPlafond?.jumlah_plafond || null;
       const latestPlafondNull = await PlafondUpdate.findOne({
           attributes: ["plafond_saat_ini"],
           where: { id_pinjaman: null },
@@ -487,8 +410,6 @@ router.get("/plafond-angsuran", async (req, res) => {
       if (!latestPlafond) {
         return res.status(404).json({ message: "Data plafond tidak ditemukan" });
       }
-  
-      // const plafondAwal = parseFloat(latestPlafond.jumlah_plafond);
 
       const angsuranBelumDihitung = await Angsuran.findAll({
         where: { sudah_dihitung: false },
@@ -497,12 +418,8 @@ router.get("/plafond-angsuran", async (req, res) => {
         ], 
         raw: true,
       });
-      // console.log("Angsuran belum dihitung:", angsuranBelumDihitung);
 
       totalDibayar = parseFloat(angsuranBelumDihitung[0]?.total_dibayar || 0);
-
-      // console.log("Total Dibayar backend:", totalDibayar);
-
       const plafondAngsuran =
         updatePlafondPinjaman + totalDibayar;
       return res.status(200).json({
@@ -677,97 +594,6 @@ router.put('/pinjaman/:id_pinjaman/status', async (req, res) => {
 });
 
 
-// router.post('/pengajuan/import-csv', upload.single("csvfile"), (req,res) => {
-//         if (!req.file) {
-//                 return res.status(400).json({ success: false, message: 'No file uploaded' });
-//         }
-        
-//         const filePath = req.file.path;
-//         const data_pengajuan = [];
-        
-//         fs.createReadStream(filePath)
-//         .pipe(csvParser())
-//         .on("data", (row) => {
-//           data_pengajuan.push({
-//             id_pinjaman: row.id_pinjaman,
-//             tanggal_pengajuan: new Date(row.tanggal_pengajuan),
-//             jumlah_pinjaman: parseInt(row.jumlah_pinjaman),
-//             jumlah_angsuran: parseInt(row.jumlah_angsuran),
-//             pinjaman_setelah_pembulatan: parseFloat(row.pinjaman_setelah_pembulatan),
-//             keperluan: row.keperluan,
-//             status_pengajuan: row.status_pengajuan = "Diterima",
-//             status_transfer: row.status_transfer = "Selesai",
-//             status_pelunasan: row.status_pelunasan,
-//             not_compliant: row.not_compliant === "true",
-//             id_peminjam: parseInt(row.id_peminjam, 10),
-//             id_asesor: parseInt(row.id_asesor, 10) || null,
-//           });
-//         })
-//         .on("end", async () => {
-//           try {
-//             if (data_pengajuan.length === 0) {
-//               throw new Error("Tidak ada data untuk diimport");
-//             }
-
-//             for (const pinjaman of data_pengajuan) {
-//                 if (pinjaman.id_asesor) {
-//                 const asesorExists = await Karyawan.findByPk(pinjaman.id_asesor);
-//                         if (!asesorExists) {
-//                         throw new Error(`Asesor dengan id_asesor ${pinjaman.id_asesor} tidak ditemukan`);
-//                         }
-//                 console.log("Asesor: ", asesorExists);
-//                 }
-
-//                 const peminjamExists = await Karyawan.findByPk(pinjaman.id_peminjam); 
-//                 if (!peminjamExists) {
-//                         throw new Error(`Peminjam dengan id_peminjam ${pinjaman.id_peminjam} tidak ditemukan`); 
-//                 }
-//             }
-
-//             // const lastAntrean = await AntreanPengajuan.findOne({
-//             //     order: [["nomor_antrean", "DESC"]], 
-//             // }); 
-//             // let lastNomorAntrean = lastAntrean ? lastAntrean.nomor_antrean : 0; 
-
-//             // const today = new Date().toISOString().split("T")[0].replace(/-/g, ""); 
-
-//             // const antrean_pengajuan = data_pengajuan.map((pinjaman) => {
-//             //     const newNomorAntrean = ++lastNomorAntrean;
-
-//             //     return {
-//             //             id_pinjaman: pinjaman.id_pinjaman,
-//             //             nomor_antrean: newNomorAntrean,
-//             //             id_antrean: `${today}_${newNomorAntrean}`, 
-//             //     };
-//             // }); 
-
-//             await Promise.all([
-//                 Pinjaman.bulkCreate(data_pengajuan),
-//                 // AntreanPengajuan.bulkCreate(antrean_pengajuan), 
-//             ])
-        
-//             res.status(200).json({
-//               success: true,
-//               message: "Data Pinjaman berhasil diimpor ke database",
-//             });
-//           } catch (error) {
-//             console.error("Error importing data:", error);
-//             res.status(500).json({
-//               success: false,
-//               message: "Gagal mengimpor data ke database",
-//               error: error.message,
-//             });
-//           } finally {
-//             fs.unlinkSync(filePath);
-//           }
-//         })
-//         .on("error", (error) => {
-//           console.error("Error parsing file:", error);
-//           res.status(500).json({ success: false, message: "Error parsing file" });
-//         });
-        
-// });
-
 router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -816,23 +642,6 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
           }
       }
 
-      // const lastAntrean = await AntreanPengajuan.findOne({
-      //     order: [["nomor_antrean", "DESC"]], 
-      // }); 
-      // let lastNomorAntrean = lastAntrean ? lastAntrean.nomor_antrean : 0; 
-
-      // const today = new Date().toISOString().split("T")[0].replace(/-/g, ""); 
-
-      // const antrean_pengajuan = data_pengajuan.map((pinjaman) => {
-      //     const newNomorAntrean = ++lastNomorAntrean;
-
-      //     return {
-      //             id_pinjaman: pinjaman.id_pinjaman,
-      //             nomor_antrean: newNomorAntrean,
-      //             id_antrean: `${today}_${newNomorAntrean}`, 
-      //     };
-      // }); 
-
       await Pinjaman.bulkCreate(data_pengajuan, { transaction });
 
       const tanggalPengajuan = data_pengajuan.reduce((acc, item) => item.tanggal_pengajuan, "");
@@ -859,28 +668,17 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
       });
 
     if (!plafondTerakhir) {
-      // console.log("Data plafond terakhir tidak ditemukan.");
-      // return res.status(404).json({ success: false, message: "Plafond terakhir tidak ditemukan" });
       plafondTerakhir = await Plafond.findOne({
         attributes: ["id_plafond", "jumlah_plafond"],
         order: [["id_plafond", "DESC"]],
         raw: true,
         transaction
       });
-
-      // const latestPlafond = await Plafond.findOne({
-      //   order: [["id_plafond", "DESC"]],
-      // });
     }
 
     let plafondBaru = parseFloat(plafondTerakhir.plafond_saat_ini || plafondTerakhir.jumlah_plafond) - totalPinjaman;
 
     console.log("Plafond baru: ", plafondBaru);
-
-    // await PlafondUpdate.update(
-    //   { plafond_saat_ini: plafondBaru },
-    //   { where: { id_pinjaman: plafondTerakhir.id_pinjaman }, transaction }
-    // );
 
     const antreans = await AntreanPengajuan.findAll({
       attributes: ['nomor_antrean', 'id_pinjaman'],
@@ -891,7 +689,6 @@ router.post('/pengajuan/import-csv', upload.single("csvfile"), async (req,res) =
     console.log("Antreans: ", antreans);
 
     if (antreans.length > 0) {
-      // Ambil detail pinjaman untuk antrean
       const antreanData = await Pinjaman.findAll({
         where: {
           id_pinjaman: { [Op.in]: antreans.map(antrean => antrean.id_pinjaman) },

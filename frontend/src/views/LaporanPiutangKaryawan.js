@@ -209,11 +209,11 @@ import {
     const handleImportSuccess = () => {
       getPinjaman();
       // getAntrean();
-      toast.success("Data Pinjaman berhasil diimport!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-      });
+      // toast.success("Data Pinjaman berhasil diimport!", {
+      //     position: "top-right",
+      //     autoClose: 5000,
+      //     hideProgressBar: true,
+      // });
     };
   
   

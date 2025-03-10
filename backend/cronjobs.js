@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import updateAngsuranOtomatis from './routes/UpdateAngsuranOtomatis.js';
 
-cron.schedule('* * 7 * *', async () => {
+cron.schedule('* * 10 * *', async () => {
     console.log(`Cron job dijalankan pada ${new Date().toISOString()}`);
     await updateAngsuranOtomatis();
 }, {

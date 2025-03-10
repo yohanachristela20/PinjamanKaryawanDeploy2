@@ -43,7 +43,7 @@ const Angsuran = db.define('angsuran', {
             const lastRecord = await Angsuran.findOne({
                 order: [['id_angsuran', 'DESC']]
             }); 
-            let newId = "A00001"; //default id
+            let newId = "A00001"; 
 
             if (lastRecord && lastRecord.id_angsuran) {
                 const lastIdNumber = parseInt(lastRecord.id_angsuran.substring(1), 10); 
