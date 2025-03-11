@@ -185,10 +185,10 @@ function Header() {
       </Modal.Header>
       <Modal.Body >Apakah anda yakin ingin keluar?</Modal.Body>
       <Modal.Footer className="mb-4">
-        <Button variant="success" onClick={() => setShowModal(false)}>
+        <Button variant="danger" onClick={() => setShowModal(false)}>
           Tidak
         </Button>
-        <Button variant="danger" onClick={handleLogout}>
+        <Button variant="success" onClick={handleLogout}>
           Ya
         </Button> 
       </Modal.Footer>

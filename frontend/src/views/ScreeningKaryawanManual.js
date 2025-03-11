@@ -436,7 +436,8 @@ const hasilScreening = React.useMemo(() => {
               </Card.Header>
               <Card.Body>
                 <Form>
-                <span className="text-danger required-select">*Mandatory fields</span>
+                <span className="text-danger required-select">(*) Wajib Diisi</span>
+                <br/><span className="text-danger required-select">Enter untuk menampilkan angsuran per bulan dan hasil pembulatan</span>
 
                   <Row>
                     <Col md="12">

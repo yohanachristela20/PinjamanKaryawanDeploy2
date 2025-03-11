@@ -110,7 +110,7 @@ const AddKaryawan = ({showAddModal, setShowAddModal, onSuccess}) => {
                 <hr />
                 <Form onSubmit={saveKaryawan}>
 
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
 
                 <Row>
                 <Col md="12">

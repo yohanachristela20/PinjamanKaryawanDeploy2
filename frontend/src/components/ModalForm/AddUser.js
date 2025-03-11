@@ -75,7 +75,7 @@ const AddUser = ({showAddModal, setShowAddModal, onSuccess}) => {
                 <hr />
                 <Form onSubmit={saveUser}>
 
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
 
                 <Row>
                 </Row>

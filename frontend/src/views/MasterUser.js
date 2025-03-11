@@ -344,9 +344,10 @@ function MasterUser() {
                               setSelectedUser(user);
                             }}
                             style={{
-                              width: 140,
+                              width: 110,
                               //96
                               fontSize: 13,
+                              float: "left",
                             }}>
                             <FaRegEdit style={{ marginRight: '8px' }} />
                             Ubah
@@ -358,8 +359,9 @@ function MasterUser() {
                               setPassword(user.id_user)
                             }}
                             style={{
-                              width: 140,
+                              width: 138,
                               fontSize: 13,
+                              float: "left",
                             }}>
                             <FaUserLock style={{ marginRight: '8px' }} />
                             Set Password
@@ -369,9 +371,10 @@ function MasterUser() {
                             variant="danger"
                             onClick={() => deleteUser(user.id_user)}
                             style={{
-                              width: 140,
+                              width: 110,
                               //103
                               fontSize: 13,
+                              float: "left",
                             }}>
                             <FaTrashAlt style={{ marginRight: '8px' }} />
                             Hapus

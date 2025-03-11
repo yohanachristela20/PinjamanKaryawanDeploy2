@@ -3,7 +3,6 @@ import {FaCheckSquare, FaFileCsv, FaFileImport, FaFilePdf, FaUserCheck} from 're
 import SearchBar from "components/Search/SearchBar.js";
 import ChartComponent from "components/Chart/BarChart.js";
 import LineComponent from "components/Chart/LineChart";
-import ImportAntreanPengajuan from "components/ModalForm/ImportAntreanPengajuan.js";
 import axios from "axios";
 import { useHistory } from "react-router-dom"; 
 import {toast } from 'react-toastify';
@@ -349,7 +348,7 @@ function Beranda() {
     try {
       // console.log('Mencoba mengupdate status pengajuan:', pinjaman);
   
-      const payload = {
+      const payload = { 
         status_pengajuan: "Diterima",
         id_asesor: userData.id_karyawan,
       };

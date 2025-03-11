@@ -380,7 +380,7 @@ const hasilScreening = React.useMemo(() => {
               </Card.Header>
               <Card.Body>
                 <Form>
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
                   <Row>
                     <Col md="12">
                     <Form.Group>

@@ -99,18 +99,18 @@ const dashboardRoutes = [
   //KARYAWAN
   {
     path: "/dashboard-karyawan2",
-    name: "Beranda 2",
+    name: "Beranda",
     icon: "nc-icon nc-chart-pie-35",
     component: DashboardKaryawan,
     layout: "/karyawan"
   },
-  {
-    path: "/beranda-karyawan",
-    name: "Beranda",
-    icon: "nc-icon nc-chart-pie-35",
-    component: BerandaKaryawan,
-    layout: "/karyawan"
-  },
+  // {
+  //   path: "/beranda-karyawan",
+  //   name: "Beranda",
+  //   icon: "nc-icon nc-chart-pie-35",
+  //   component: BerandaKaryawan,
+  //   layout: "/karyawan"
+  // },
   {
     path: "/screening-pinjaman",
     name: "Screening Pinjaman",

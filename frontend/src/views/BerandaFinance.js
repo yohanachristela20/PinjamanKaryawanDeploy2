@@ -545,14 +545,17 @@ function BerandaFinance() {
 
   const dataPerDivisi = async (selectedDepartemen, selectedMonth = "", selectedYear = "") => {
     try {
+      const tahun = selectedYear || new Date().getFullYear();
+      const bulan = selectedMonth === "" ? undefined : selectedMonth.padStart(2, '0');
+
       const response = await axios.get("http://10.70.10.144:5000/data-divisi", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
           departemen: selectedDepartemen || "",
-          bulan: selectedMonth || "",
-          tahun: selectedYear || new Date().getFullYear(),
+          bulan: bulan,
+          tahun: tahun,
         },
       });
   
@@ -581,6 +584,10 @@ function BerandaFinance() {
       }
     } catch (error) {
       console.error("Error fetching dataPerDivisi:", error.message);
+      setChartDataBulanan({
+        labels: [],
+        series: [[]],
+      });
     }
   };
 

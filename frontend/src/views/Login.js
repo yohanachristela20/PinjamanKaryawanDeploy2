@@ -68,7 +68,7 @@ function Login() {
       <Heartbeat/>
     }
     else if (role === "Karyawan") {
-      history.push("/karyawan/beranda-karyawan"); 
+      history.push("/karyawan/dashboard-karyawan2"); 
       <Heartbeat/>
     } 
     else if (role === "Super Admin") {

@@ -508,7 +508,8 @@ useEffect(() => {
   
     if (pinjamanValid && keperluanValid) {
       const angsuranBulanan = jumlah_pinjaman / 60; 
-      const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10; 
+      // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10; 
+      const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100)
       setRasioAngsuran(rasioAngsuran.toFixed(1));
     } else {
       setRasioAngsuran(null);
@@ -586,7 +587,7 @@ const hasilScreening = React.useMemo(() => {
   const isDeclined =
     calculateYears(tanggal_masuk) < 5 ||
 
-    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) > 20 ||
+    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) >= 20 ||
     calculatePensiun(tanggal_lahir, jenis_kelamin) < 6 
 
     if(isDeclined) return "Decline";
@@ -608,14 +609,15 @@ const hasilScreening = React.useMemo(() => {
   statusPinjaman,
 ]);
 
-const calculateRasioAngsuranMemoized = useMemo(() => {
-  if (!jumlah_pinjaman || !gajiPokok) return null; 
-  
-  const angsuranBulanan = jumlah_pinjaman / 60;
-  const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
-  return parseFloat(rasioAngsuran.toFixed(2)); 
+  const calculateRasioAngsuranMemoized = useMemo(() => {
+    if (!jumlah_pinjaman || !gajiPokok) return null; 
+    
+    const angsuranBulanan = jumlah_pinjaman / 60;
+    // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
+    const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100)
+    return parseFloat(rasioAngsuran.toFixed(2)); 
 
-}, [jumlah_pinjaman, gajiPokok]);
+  }, [jumlah_pinjaman, gajiPokok]);
 
   const savePengajuan = async (e) => {
     e.preventDefault();
@@ -721,7 +723,7 @@ const calculateRasioAngsuranMemoized = useMemo(() => {
 
                 <div>
                 <Form>
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
                 {loading ? (
                   <div className="text-center">
                     <Spinner animation="border" variant="primary" />
@@ -732,7 +734,7 @@ const calculateRasioAngsuranMemoized = useMemo(() => {
 
                   {steps === 1 && (
                     <>
-                      <br/><span className="text-danger required-select">*Enter untuk menampilkan angsuran per bulan dan hasil pembulatan</span>
+                      <br/><span className="text-danger required-select">Enter untuk menampilkan angsuran per bulan dan hasil pembulatan</span>
                       <Row>
                         <Col md="12" className="mt-2">
                           <Form.Group>
@@ -990,8 +992,8 @@ const calculateRasioAngsuranMemoized = useMemo(() => {
                     <Table className="table-hover table-striped table-bordered" hidden={steps === 1 && keperluan === "" || steps === 1 && jumlah_angsuran === ""}>
                       <thead className="table-primary text-nowwrap">
                         <tr>
-                          <th style={{fontSize: 16}}>Deskripsi</th>
                           <th style={{fontSize: 16}}>Syarat</th>
+                          <th style={{fontSize: 16}}>Deskripsi</th>
                           <th style={{fontSize: 16}}>Kondisi saat ini</th>
                           <th style={{fontSize: 16}}>Status</th>
                         </tr>

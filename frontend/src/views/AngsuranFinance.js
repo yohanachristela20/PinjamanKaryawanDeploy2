@@ -115,9 +115,9 @@ function AngsuranFinance() {
   
     const updateAngsuran = async () => {
       const today = new Date();
-      if (today.getDate() !== 28) {
+      if (today.getDate() !== 1) {
         setLoading(false);
-        toast.info("Update angsuran otomatis hanya dapat dilakukan pada tanggal 28.");
+        toast.info("Update angsuran otomatis hanya dapat dilakukan pada tanggal 1.");
         return;
       }
 

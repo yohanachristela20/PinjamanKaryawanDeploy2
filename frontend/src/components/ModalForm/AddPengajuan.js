@@ -190,7 +190,7 @@ const AddPengajuan = ({ showAddModal, setShowAddModal, onSuccess }) => {
                 <Modal.Body className="text-left">
                     <hr />
                     <Form onSubmit={savePengajuan}>
-                    <span className="text-danger required-select">*Wajib diisi.</span>
+                    <span className="text-danger required-select">(*) Wajib diisi.</span>
                     
                         <Row>
                             <Col md="12">

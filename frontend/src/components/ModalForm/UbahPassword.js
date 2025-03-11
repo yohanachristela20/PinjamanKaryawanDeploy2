@@ -77,7 +77,7 @@ function UbahPassword({ show, onHide }) {
 
             <Modal.Body>
                 <Form onSubmit={handleChangePassword}>
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
                     <Form.Group className="mb-3">
                         <Form.Label>Username</Form.Label>
                         <Form.Control

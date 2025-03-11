@@ -447,7 +447,8 @@ useEffect(() => {
               </Card.Header>
               <Card.Body>
                 <Form>
-                <span className="text-danger required-select">*Wajib diisi.</span>
+                <span className="text-danger required-select">(*) Wajib diisi.</span>
+                
                   <Row>
                     <Col md="12">
                     <Form.Group>
@@ -653,8 +654,8 @@ useEffect(() => {
                       <Table className="table-hover table-striped table-bordered">
                         <thead className="table-primary text-nowwrap">
                           <tr>
-                            <th style={{fontSize: 16}}>Deskripsi</th>
                             <th style={{fontSize: 16}}>Syarat</th>
+                            <th style={{fontSize: 16}}>Deskripsi</th>
                             <th style={{fontSize: 16}}>Kondisi saat ini</th>
                             <th style={{fontSize: 16}}>Status</th>
                           </tr>
