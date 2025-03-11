@@ -587,7 +587,8 @@ const hasilScreening = React.useMemo(() => {
   const isDeclined =
     calculateYears(tanggal_masuk) < 5 ||
 
-    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) >= 20 ||
+    calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) > 20 ||
+    rasioAngsuran > 20 ||
     calculatePensiun(tanggal_lahir, jenis_kelamin) < 6 
 
     if(isDeclined) return "Decline";
@@ -958,6 +959,7 @@ const hasilScreening = React.useMemo(() => {
                             selectedPinjaman={selectedPinjaman}
                             totalPinjaman={totalPinjaman}
                             totalDibayar={totalDibayar}
+                            
                           />
                         </>
                       ) : steps === 2 && hasilScreening === "Accepted" ? (

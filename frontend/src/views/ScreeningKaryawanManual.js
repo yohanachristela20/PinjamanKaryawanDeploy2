@@ -199,7 +199,8 @@ const calculateRasioAngsuran = () => {
 
   if (pinjamanValid && keperluanValid) {
     const angsuranBulanan = jumlah_pinjaman / 60; // Contoh tenor 60 bulan
-    const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10; // Dalam persentase
+    // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10; // Dalam persentase
+    const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100);
     setRasioAngsuran(rasioAngsuran.toFixed(1));
   } else {
     setRasioAngsuran(null);
@@ -346,7 +347,8 @@ const calculateRasioAngsuranMemoized = useMemo(() => {
   // Hitung angsuran bulanan berdasarkan tenor 60 bulan
   const angsuranBulanan = jumlah_pinjaman / 60;
   // Hitung rasio angsuran dalam bentuk persentase
-  const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
+  // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
+  const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100)
 
   // console.log("Angsuran bulanan: ", angsuranBulanan);
   // console.log("Rasio angsuran (persentase): ", rasioAngsuran);
@@ -407,6 +409,7 @@ const hasilScreening = React.useMemo(() => {
     calculateYears(tanggal_masuk) < 5 ||
     totalPinjaman - totalSudahDibayar !== 0 ||
     calculateRasioAngsuran(jumlah_pinjaman, gajiPokok) > 20 ||
+    rasioAngsuran > 20 ||
     calculatePensiun(tanggal_lahir, jenis_kelamin) < 6 ||
     plafondTersediaParsed < jumlahPinjamanParsed;
 

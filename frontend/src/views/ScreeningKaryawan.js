@@ -52,6 +52,7 @@ function ScreeningKaryawan({ setHasilScreening }) {
   const [isDeclined, setIsDeclined] = useState(false);
   const history = useHistory();
   const [screeningResult, setScreeningResult] = useState(null);
+  const [rasioAngsuran] = useState(0);
 
   
   const token = localStorage.getItem("token");
@@ -271,7 +272,8 @@ function ScreeningKaryawan({ setHasilScreening }) {
     // console.log("Gaji pokok: ", gajiPokok);
   
     const angsuranBulanan = jumlahPinjaman / 60;
-    const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
+    // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10;
+    const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100)
   
     // console.log("Angsuran bulanan: ", angsuranBulanan);
     // console.log("Rasio angsuran (persentase): ", rasioAngsuran);
@@ -532,7 +534,7 @@ console.log("Total belum dibayar:", totalBelumDibayar);
                               calculateRasioAngsuran(
                                 selectedPinjaman.jumlah_pinjaman,
                                 selectedPinjaman.Peminjam.gaji_pokok
-                              ) > 20) ||
+                              ) > 20) || rasioAngsuran > 20 ||
                             (selectedPinjaman?.Peminjam.tanggal_lahir &&
                               selectedPinjaman?.Peminjam.jenis_kelamin &&
                               calculatePensiun(
