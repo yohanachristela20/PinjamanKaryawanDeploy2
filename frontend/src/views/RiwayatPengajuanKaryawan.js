@@ -424,6 +424,7 @@ const findNomorAntrean = (id_pinjaman) => {
                         <th className="border-0">Nomor Antrean</th>
                         <th className="border-0">Ditransfer Oleh</th>
                         <th className="border-0">Keperluan</th>
+                        <th className="border-0">Tanggal Plafond Tersedia</th>
                         <th className="border-0">Status Pengajuan</th>
                         <th className="border-0">Status Transfer</th>
                         <th className="border-0">Aksi</th>
@@ -446,6 +447,7 @@ const findNomorAntrean = (id_pinjaman) => {
                           <td className="text-right">{findNomorAntrean(pinjaman.id_pinjaman)}</td>
                           <td className="text-center">{pinjaman.Asesor ? pinjaman.Asesor.nama: 'N/A'}</td>
                           <td className="text-center">{pinjaman.keperluan}</td>
+                          <td className="text-center">{pinjaman.UpdatePinjamanPlafond ? pinjaman.UpdatePinjamanPlafond.tanggal_plafond_tersedia: '-'}</td>
                           <td className="text-center">
                             {pinjaman.status_pengajuan === "Diterima" ? (
                               <Badge pill bg="success p-2">

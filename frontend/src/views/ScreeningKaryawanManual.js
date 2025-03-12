@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import {FaCheckCircle, FaTimesCircle, FaHistory} from 'react-icons/fa'; 
 import { useHistory } from "react-router-dom";
+import {toast } from 'react-toastify';
 
 
 const BASE_URL = 'http://10.70.10.144:5000';
@@ -73,6 +74,10 @@ function ScreeningKaryawanManual() {
   //     setKeperluan(selectedPinjaman.keperluan); 
   //   }
   // }, [selectedPinjaman]);
+
+  useEffect(() => {
+    toast.dismiss();
+  });
 
   useEffect(() => {
     const fetchData = async () => {

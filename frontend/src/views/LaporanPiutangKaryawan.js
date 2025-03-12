@@ -75,6 +75,9 @@ import {
 
   const [userData, setUserData] = useState({id_karyawan: "", nama: "", divisi: "", role: ""}); 
 
+  useEffect(() => {
+    toast.dismiss();
+  });
 
   useEffect(() => {
  

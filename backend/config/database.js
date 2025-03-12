@@ -23,12 +23,12 @@ const db = new Sequelize(process.env.DB_DBNAME, process.env.DB_USERNAME, process
         timezone: "local", 
     },
     logging: false,
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 120000,
-        idle: 60000
-    }
+    // pool: {
+    //     max: 5,
+    //     min: 0,
+    //     acquire: 120000,
+    //     idle: 60000
+    // }
 });
 
 try {

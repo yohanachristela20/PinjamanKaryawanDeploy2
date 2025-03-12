@@ -8,8 +8,8 @@ class Footer extends Component {
         <Container fluid>
           <nav>
             <p className="copyright text-center">
-              © {new Date().getFullYear()}{" "}
-              Campina Dev Team, 2025
+              © Campina Dev Team, 2025
+              {/* {new Date().getFullYear()}{" "} */}
             </p>
           </nav>
         </Container>
