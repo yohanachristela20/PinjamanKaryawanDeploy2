@@ -95,73 +95,44 @@ export const createAngsuran = async (req, res) => {
             order: [['nomor_antrean', 'ASC']],
         });
 
-        if (antreans.length === 0) return;
-
-        console.log("Antreans: ", antreans);
-
-        const antreanData = await Pinjaman.findAll({
-            where: {
-                id_pinjaman: {
-                    [Op.in]: antreans.map(antrean => antrean.id_pinjaman),
+        if (antreans.length > 0) {
+            // Ambil detail pinjaman untuk antrean
+            const antreanData = await Pinjaman.findAll({
+                where: {
+                id_pinjaman: { [Op.in]: antreans.map(antrean => antrean.id_pinjaman) },
                 },
-            },
-            attributes: ['id_pinjaman', 'jumlah_pinjaman'],
-            transaction,
-        });
+                attributes: ['id_pinjaman', 'jumlah_pinjaman'],
+                transaction,
+            });
+    
+            console.log("Antrean data: ", antreanData);
+    
+            const pinjamanMap = new Map(antreanData.map(item => [item.id_pinjaman, item.jumlah_pinjaman]));
+    
+            console.log("Pinjaman Map: ", pinjamanMap);
+    
+            let plafondSaatIni = plafondBaru;
+            console.log("Plafondsaatini = plafondbaru: ", plafondSaatIni);
+    
+            for (const antrean of antreans) {
+                const jumlahPinjamanAntrean = pinjamanMap.get(antrean.id_pinjaman) || 0;
 
-        const pinjamanMap = new Map(antreanData.map(item => [item.id_pinjaman, item.jumlah_pinjaman]));
+                let plafondAkhir = parseFloat((plafondSaatIni - jumlahPinjamanAntrean).toFixed(2));
+                console.log("Plafond saat ini: ", plafondAkhir);
 
-        let plafondSaatIni = plafondBaru;
-
-        // Loop untuk mengelola antrean 1 hingga z
-        for (let i = 0; i < antreans.length; i++) {
-            const antrean = antreans[i];
-            const jumlahPinjamanAntrean = pinjamanMap.get(antrean.id_pinjaman) || 0;
-        
-            // Kurangi plafond_saat_ini untuk antrean berikutnya
-            plafondSaatIni = parseFloat((plafondSaatIni - jumlahPinjamanAntrean).toFixed(2));
-
-
-            // Update plafond_saat_ini untuk antrean saat ini
-            if (plafondSaatIni > 0) {
-                let today = new Date();
-                let formattedToday = today.toISOString().split("T")[0]; 
+                if (plafondSaatIni > 0) {
+                let formattedToday = new Date().toISOString().split("T")[0];
                 await PlafondUpdate.update(
                     {
-                        plafond_saat_ini: plafondSaatIni,
-                        tanggal_plafond_tersedia: formattedToday,
+                    plafond_saat_ini: plafondAkhir,
+                    tanggal_plafond_tersedia: formattedToday,
                     },
-                    { 
-                        where: { id_pinjaman: antrean.id_pinjaman },
-                        transaction,
-                    }
+                    { where: { id_pinjaman: antrean.id_pinjaman }, transaction }
                 );
-            } else if (plafondSaatIni < jumlahPinjamanAntrean) {
-                const nextMonthDate = new Date();
-                nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
-
-                let bulan = Math.floor(plafondSaatIni / totalAngsuranHarusDibayar);
-                let bulanTambahan = Math.abs(bulan);
-                console.log("Plafond saat ini: ", plafondSaatIni);
-                console.log("Plafond sudah dibayar: ", totalAngsuranHarusDibayar);
-                console.log("Bulan tambahan: ", bulanTambahan);
-                let tanggalPlafondTersedia = new Date();
-
-                tanggalPlafondTersedia.setMonth(tanggalPlafondTersedia.getMonth() + bulanTambahan);
-                tanggalPlafondTersedia.setDate(1);
-
-                await PlafondUpdate.update(
-                    {
-                        plafond_saat_ini: plafondSaatIni,
-                        tanggal_plafond_tersedia: tanggalPlafondTersedia,
-                    },
-                    { 
-                        where: { id_pinjaman: antrean.id_pinjaman },
-                        transaction,
-                    }
-                ); 
+                }
             }
         }
+
         await transaction.commit();
         res.status(201).json({
             msg: "Data Angsuran baru dibuat dan PlafondUpdate diperbarui",

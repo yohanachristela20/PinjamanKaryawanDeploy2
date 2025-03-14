@@ -8,7 +8,7 @@ const PinjamanRow = ({ pinjaman }) => {
   const token = localStorage.getItem("token");
   const updateStatusPelunasan = async (idPinjaman, statusPelunasan) => {
     try {
-      const response = await fetch(`http://10.70.10.144:5000/pinjaman/${idPinjaman}/status`, {
+      const response = await fetch(`http://10.70.10.157:5000/pinjaman/${idPinjaman}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

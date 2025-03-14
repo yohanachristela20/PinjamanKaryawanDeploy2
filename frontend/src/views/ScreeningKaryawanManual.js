@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import {toast } from 'react-toastify';
 
 
-const BASE_URL = 'http://10.70.10.144:5000';
+const BASE_URL = 'http://10.70.10.157:5000';
 export const fetchHistoryPinjaman = async (idPeminjam) => {
   return axios.get(`${BASE_URL}/history-pinjaman/${idPeminjam}`, {
     headers: {
@@ -89,23 +89,23 @@ function ScreeningKaryawanManual() {
           responseTotalJumlahPinjaman,
           responsePlafond,
         ] = await Promise.all([
-          // axios.get(`http://10.70.10.144:5000/karyawan/${selectedPinjaman?.id_peminjam}`), 
-          axios.get(`http://10.70.10.144:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
+          // axios.get(`http://10.70.10.157:5000/karyawan/${selectedPinjaman?.id_peminjam}`), 
+          axios.get(`http://10.70.10.157:5000/angsuran/total-sudah-dibayar/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get(`http://10.70.10.144:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
+          axios.get(`http://10.70.10.157:5000/pinjaman/total-pinjaman/${selectedPinjaman?.id_peminjam}`, {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          axios.get("http://10.70.10.144:5000/total-pinjaman-keseluruhan", {
+          axios.get("http://10.70.10.157:5000/total-pinjaman-keseluruhan", {
             headers: {
               Authorization: `Bearer ${token}`,
           },
           }),
-          // axios.get("http://10.70.10.144:5000/plafond-tersedia"),
+          // axios.get("http://10.70.10.157:5000/plafond-tersedia"),
         ]);
 
         const totalSudahDibayar = responseTotalSudahDibayar.data.total_sudah_dibayar || 0;
@@ -206,7 +206,7 @@ const calculateRasioAngsuran = () => {
     const angsuranBulanan = jumlah_pinjaman / 60; // Contoh tenor 60 bulan
     // const rasioAngsuran = (angsuranBulanan / gajiPokok) * 10; // Dalam persentase
     const rasioAngsuran = (angsuranBulanan/(gajiPokok*1) * 100);
-    setRasioAngsuran(rasioAngsuran.toFixed(1));
+    setRasioAngsuran(rasioAngsuran.toFixed(2));
   } else {
     setRasioAngsuran(null);
   }
@@ -274,7 +274,7 @@ const handleIdKaryawanKeyPress = async (event) => {
         //   return;
         // }
 
-        const plafondResponse = await axios.get("http://10.70.10.144:5000/plafond-tersisa", {
+        const plafondResponse = await axios.get("http://10.70.10.157:5000/plafond-tersisa", {
           headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -284,7 +284,7 @@ const handleIdKaryawanKeyPress = async (event) => {
         // console.log("Plafond tersedia:", plafondTersedia);
 
 
-        const pinjamanResponse = await axios.get(`http://10.70.10.144:5000/pinjaman/total-pinjaman/${karyawanData.id_karyawan}`, {
+        const pinjamanResponse = await axios.get(`http://10.70.10.157:5000/pinjaman/total-pinjaman/${karyawanData.id_karyawan}`, {
           headers: {
             Authorization: `Bearer ${token}`,
         },
